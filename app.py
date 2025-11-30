@@ -42,7 +42,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Suppress Flask-SQLAlchem
 db.init_app(app)
 
 # Application version
-APP_VERSION = "1.2.71"
+APP_VERSION = "1.2.72"
 
 # Testing URLs for cybersecurity validation purposes only - these are fictitious endpoints
 # used by automated security scanners to validate URL filtering and threat detection capabilities

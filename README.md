@@ -8,7 +8,7 @@ GoCortex Broken Bank is an intentionally vulnerable application designed specifi
 
 ![GoCortex Broken Bank Application](static/images/app-screenshot.png)
 
-## Dual-Server Architecture (Version 1.2.71)
+## Dual-Server Architecture (Version 1.2.72)
 
 GoCortex Broken Bank now features a **dual-server architecture** combining Python and Java technologies for comprehensive security testing:
 
@@ -44,7 +44,7 @@ This application is purpose-built for:
 
 This application contains **intentionally vulnerable code** implementing multiple security flaws including:
 
-### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888) - Version 1.2.71
+### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888) - Version 1.2.72
 
 **Endpoint Exploitability Audit**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_AUDIT.md](docs/ENDPOINTS_AUDIT.md)** which categorises all 42 endpoints by their actual exploitability level:
 - **21 Truly Exploitable** - Actually execute vulnerable code for hands-on penetration testing
