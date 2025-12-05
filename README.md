@@ -8,13 +8,13 @@ GoCortex Broken Bank is an intentionally vulnerable application designed specifi
 
 ![GoCortex Broken Bank Application](static/images/app-screenshot.png)
 
-## Dual-Server Architecture (Version 1.2.72)
+## Dual-Server Architecture (Version 1.2.73)
 
 GoCortex Broken Bank now features a **dual-server architecture** combining Python and Java technologies for comprehensive security testing:
 
 ### Flask/Gunicorn Server (Port 8888)
 - **Purpose**: SAST (Static Application Security Testing) endpoints
-- **Technology**: Python 3.8, Flask 2.0.1, Gunicorn 20.1.0
+- **Technology**: Python 3.11, Flask 2.0.1, Gunicorn 20.1.0
 - **Coverage**: 42 vulnerability endpoints including SQL injection, XSS, SSRF, weak cryptography
 - **Testing Focus**: Code-level vulnerabilities, secrets detection, license compliance
 
@@ -44,7 +44,7 @@ This application is purpose-built for:
 
 This application contains **intentionally vulnerable code** implementing multiple security flaws including:
 
-### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888) - Version 1.2.72
+### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888) - Version 1.2.73
 
 **Endpoint Exploitability Audit**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_AUDIT.md](docs/ENDPOINTS_AUDIT.md)** which categorises all 42 endpoints by their actual exploitability level:
 - **21 Truly Exploitable** - Actually execute vulnerable code for hands-on penetration testing
@@ -701,14 +701,17 @@ LOCALE=kr docker run -d -p 8888:8888 -p 9999:8080 -e LOCALE=kr gocortex-broken-b
 
 The included `Dockerfile` contains intentional vulnerabilities for comprehensive security testing:
 
-- **Vulnerable Base Image**: Uses Python 3.8 (older version)
+- **Vulnerable Base Image**: Uses Python 3.11-bookworm
 - **Insecure Dependencies**: Pinned to vulnerable package versions (Flask 2.0.1, PyJWT 1.7.1, Tomcat 8.5.0, Spring 5.3.0, etc.)
 - **Root User**: Runs as root user (security risk)
 - **Hardcoded Secrets**: Environment variables with exposed AWS, OpenAI, and other API credentials
 - **Excessive Permissions**: World-writable directories (chmod 777)
 - **Dual Application Ports**: Exposes port 8888 (Flask/Gunicorn) and port 8080/9999 (Tomcat)
 - **No SSL/TLS**: Unencrypted communications
-- **Package Vulnerabilities**: Includes vulnerable versions of cryptography, requests, urllib3, Tomcat, Spring Framework
+- **Package Vulnerabilities**: Mixed vulnerability detection types:
+  - **Direct CVEs**: cryptography 39.0.0 (CVE-2023-23931, CVE-2023-0286), requests, urllib3, Tomcat, Spring Framework
+  - **Bundled Dependency CVEs**: psycopg2-binary 2.9.6 (OpenSSL, libpq vulnerabilities in bundled libraries)
+  - **Pattern-Based Detection**: PyYAML 6.0 (unsafe_load patterns trigger SAST scanners without direct CVEs)
 
 **Note**: External services (MySQL, PostgreSQL, MongoDB, Redis, LDAP) are **mocked within the Flask application** rather than deployed as separate containers. This provides comprehensive vulnerability testing whilst maintaining a single-container deployment for simplicity.
 

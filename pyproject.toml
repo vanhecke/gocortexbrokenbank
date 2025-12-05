@@ -1,6 +1,6 @@
 [project]
 name = "gocortexbrokenbank"
-version = "1.2.72"
+version = "1.2.73"
 description = "GoCortex Broken Bank - Intentionally vulnerable banking application for CI/CD security testing and educational purposes"
 authors = [
     {name = "Simon Sigre", email = "simon.sigre@gocortex.com"},
@@ -8,17 +8,17 @@ authors = [
 requires-python = ">=3.11"
 dependencies = [
     # Vulnerable packages for SAST testing (pinned to vulnerable versions)
-    "cryptography==3.4.8",
+    "cryptography==39.0.0",
     "email-validator==1.1.3",
     "flask==2.0.1",
     "flask-login==0.5.0",
     "flask-sqlalchemy==2.5.1",
     "gunicorn==20.0.4",
     "ldap3==2.8.1",
-    "psycopg2-binary==2.8.6",
+    "psycopg2-binary==2.9.6",
     "pyjwt==2.1.0",
     "pymongo==3.11.4",
-    "pyyaml==5.4.1",
+    "pyyaml==6.0",
     "requests==2.25.1",
     "sqlalchemy==1.4.23",
     "urllib3==1.26.5",
