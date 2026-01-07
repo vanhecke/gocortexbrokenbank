@@ -15,6 +15,7 @@ env:
 jobs:
   cortex-code-scan:
     runs-on: ubuntu-latest
+    environment: env1
 
     steps:
     - name: Checkout Repository
