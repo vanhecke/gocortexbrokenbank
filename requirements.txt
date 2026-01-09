@@ -153,3 +153,6 @@ pygremlinbox-malware-credential-harvesting==1.4.6
 pygremlinbox-malware-cryptomining-indicators==1.4.6
 pygremlinbox-malware-install-execution==1.4.6
 pygremlinbox-malware-network-indicators==1.4.6
+faker
+requests
+faker

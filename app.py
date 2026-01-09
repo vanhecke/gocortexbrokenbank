@@ -8,8 +8,12 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.middleware.proxy_fix import ProxyFix
 # Proxy imports removed - no separate lab applications
 
+# Log shipping for SIEM integration
+from log_shipping import bbwaf_logging_middleware, log_auth_event
+from auth_traffic_generator import start_auth_generator
+
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # Create SQLAlchemy instance (compatible with older versions)
 # Using try/except for compatibility with different SQLAlchemy versions
@@ -42,7 +46,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Suppress Flask-SQLAlchem
 db.init_app(app)
 
 # Application version
-APP_VERSION = "1.2.73"
+APP_VERSION = "1.3.2"
 
 # Testing URLs for cybersecurity validation purposes only - these are fictitious endpoints
 # used by automated security scanners to validate URL filtering and threat detection capabilities
@@ -55,11 +59,11 @@ def load_localisation():
     locale_code = os.environ.get("LOCALE", "en")
     
     locale_files = {
-        "en": "localise.yaml",
-        "kr": "localise.yaml.kr"
+        "en": "config/localise.yaml",
+        "kr": "config/localise.yaml.kr"
     }
     
-    locale_file = locale_files.get(locale_code, "localise.yaml")
+    locale_file = locale_files.get(locale_code, "config/localise.yaml")
     
     if locale_code not in locale_files:
         logging.warning(f"Unknown LOCALE '{locale_code}', defaulting to English (en)")
@@ -69,15 +73,18 @@ def load_localisation():
             logging.info(f"Loaded localisation from {locale_file}")
             return yaml.safe_load(file)
     except FileNotFoundError:
-        logging.warning(f"Locale file {locale_file} not found, falling back to localise.yaml")
+        logging.warning(f"Locale file {locale_file} not found, falling back to config/localise.yaml")
         try:
-            with open('localise.yaml', 'r') as file:
+            with open('config/localise.yaml', 'r') as file:
                 return yaml.safe_load(file)
         except FileNotFoundError:
             logging.error("Default localisation file not found")
             return {}
 
 localisation = load_localisation()
+
+# Apply BBWAF logging middleware for SIEM integration
+bbwaf_logging_middleware(app)
 
 # Make localisation available in templates
 @app.context_processor
@@ -96,10 +103,16 @@ def disclaimer():
 @app.route('/netbank')
 def netbank():
     """Personal netbank page with session-based balance and transactions"""
-    if 'account_balance' not in session:
+    is_new_session = 'account_balance' not in session
+    
+    if is_new_session:
         session['account_balance'] = round(random.uniform(150, 8500000), 2)
         session['account_number'] = f"{random.randint(10000000, 99999999)}"
         session['sort_code'] = f"{random.randint(10, 99)}-{random.randint(10, 99)}-{random.randint(10, 99)}"
+    
+    # Log authentication event for SIEM
+    username = session.get('username', f"user_{session['account_number'][-4:]}")
+    log_auth_event(username, "success", request, simulated=False)
     
     balance = session['account_balance']
     account_number = session['account_number']
@@ -153,6 +166,10 @@ def signup():
         new_account_number = f"{random.randint(10000000, 99999999)}"
         new_sort_code = f"{random.randint(10, 99)}-{random.randint(10, 99)}-{random.randint(10, 99)}"
         account_type = request.form.get('account_type', 'personal')
+        
+        # Log signup event for SIEM
+        username = request.form.get('full_name', f"user_{new_account_number[-4:]}")
+        log_auth_event(username, "signup_success", request, simulated=False)
         
         return render_template('signup.html', 
                              success=True,
@@ -784,3 +801,6 @@ with app.app_context():
             # Continue anyway for testing purposes
 
 # Lab applications removed - vulnerabilities built into main app
+
+# Start background auth traffic generator for SIEM testing
+start_auth_generator()

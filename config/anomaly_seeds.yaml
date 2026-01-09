@@ -1,0 +1,125 @@
+# GoCortex Broken Bank - Anomaly Seed Configuration
+# Version: 1.3.2
+#
+# This file defines predictable suspicious patterns that are seeded into
+# the simulated authentication traffic for SIEM demo and testing purposes.
+#
+# These values appear at defined intervals to create detectable patterns
+# that security analysts can identify during demonstrations.
+
+anomaly_config:
+  # How often seeded anomalies appear in the traffic stream
+  frequency_minutes: 10
+  
+  # Percentage of traffic that contains seeded anomalies (0-100)
+  anomaly_percentage: 5
+
+# Suspicious source IP addresses
+# These IPs will be seeded into the authentication stream at the configured frequency
+suspicious_ips:
+  - ip: "185.220.101.42"
+    label: "Known Tor exit node"
+    weight: 3
+    
+  - ip: "45.33.32.156"
+    label: "Security scanner"
+    weight: 2
+    
+  - ip: "91.240.118.172"
+    label: "Brute force origin"
+    weight: 2
+    
+  - ip: "193.142.146.35"
+    label: "Credential stuffing source"
+    weight: 1
+    
+  - ip: "2001:db8:85a3::8a2e:370:7334"
+    label: "Suspicious IPv6 endpoint"
+    weight: 1
+
+# Suspicious user agent strings
+# These indicate automated tools, outdated browsers, or scripted access
+suspicious_user_agents:
+  - agent: "python-requests/2.25.1"
+    label: "Scripted access (Python)"
+    weight: 3
+    
+  - agent: "curl/7.68.0"
+    label: "Command line tool"
+    weight: 2
+    
+  - agent: "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"
+    label: "Outdated browser (IE6)"
+    weight: 2
+    
+  - agent: "Wget/1.21"
+    label: "Automated download tool"
+    weight: 1
+    
+  - agent: "sqlmap/1.5.2"
+    label: "SQL injection tool"
+    weight: 1
+    
+  - agent: "Nikto/2.1.6"
+    label: "Web vulnerability scanner"
+    weight: 1
+
+# Predefined attack scenarios
+# These create recognisable patterns for SIEM correlation rules
+scenarios:
+  brute_force:
+    description: "Multiple failed logins from same IP within short timeframe"
+    frequency_minutes: 30
+    pattern:
+      failed_attempts: 10
+      time_window_seconds: 60
+      source_ip: "91.240.118.172"
+      
+  credential_stuffing:
+    description: "Multiple usernames attempted from same IP"
+    frequency_minutes: 45
+    pattern:
+      unique_usernames: 20
+      time_window_seconds: 120
+      source_ip: "193.142.146.35"
+      
+  impossible_travel:
+    description: "Same user authenticates from AU then KR within 5 minutes"
+    frequency_minutes: 60
+    pattern:
+      first_country: "AU"
+      second_country: "KR"
+      time_gap_minutes: 5
+      
+  account_takeover:
+    description: "Successful login after multiple failures, then password change"
+    frequency_minutes: 90
+    pattern:
+      failed_attempts_before: 5
+      successful_login: true
+      password_change: true
+
+# Normal traffic distribution for realistic background
+normal_traffic:
+  # Countries for randomised source IPs (weighted distribution)
+  countries:
+    - code: "AU"
+      weight: 70
+    - code: "KR"
+      weight: 20
+    - code: "US"
+      weight: 5
+    - code: "GB"
+      weight: 5
+      
+  # Success/failure ratio for normal logins
+  success_rate_percent: 92
+  
+  # Device type distribution
+  device_types:
+    - type: "desktop"
+      weight: 45
+    - type: "mobile"
+      weight: 40
+    - type: "tablet"
+      weight: 15

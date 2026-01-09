@@ -95,6 +95,29 @@ sections:
   our_services_title: "우리의 서비스"
   our_services_description: "귀하의 재무 목표에 맞춘 종합 뱅킹 솔루션을 발견하세요"
 
+landing_service_cards:
+  personal_banking:
+    title: "개인 뱅킹"
+    description: "개인 넷뱅크 계좌 대시보드 및 거래 내역에 액세스"
+    badge: "이용 가능"
+    badge_type: "success"
+  business_banking:
+    title: "비즈니스 뱅킹"
+    description: "역외 뱅킹 서비스 및 기업 금융 솔루션"
+    badge: "이용 가능"
+    badge_type: "success"
+  investment_services:
+    title: "투자 서비스"
+    description: "보장된 수익률의 독점 투자 기회"
+    badge: "인기"
+    badge_type: "warning"
+  digital_services:
+    title: "디지털 서비스"
+    description: "익명 디지털 뱅킹 및 암호화폐 서비스"
+    badge: "이용 가능"
+    badge_type: "success"
+  open_account_button: "신규 계좌 개설 - 본인 확인 불필요"
+
 exploit_section:
   title: "고급 보안 테스트 - 익스플로잇 엔드포인트"
   description: "포괄적인 침투 테스트를 위한 Java/Tomcat 기반 원격 코드 실행 엔드포인트"
@@ -135,6 +158,79 @@ exploit_section:
 cta:
   title: "뱅킹을 시작할 준비가 되셨나요?"
   description: "재무 관리를 위해 GoCortex Broken Bank를 신뢰하는 수백만 고객과 함께하세요"
+
+disclaimer:
+  page_title: "보안 정보"
+  heading: "보안 정보"
+  version_prefix: "CI/CD 테스트 애플리케이션 v"
+  alert_heading: "의도적으로 취약한 소프트웨어"
+  do_not_use_heading: "다음 용도로 사용 금지:"
+  do_not_use_items:
+    - "프로덕션 환경"
+    - "공개 애플리케이션"
+    - "실제 고객 데이터 처리"
+    - "외부 네트워크 스캔"
+    - "취약한 코드 작성 학습"
+  appropriate_uses_heading: "적절한 사용 사례:"
+  appropriate_uses_items:
+    - "CI/CD 보안 테스트 파이프라인"
+    - "자동화된 보안 검증"
+    - "DevSecOps 테스트 환경"
+    - "교육용 보안 훈련"
+    - "보안 도구 벤치마킹"
+  vulnerabilities_heading: "구현된 취약점"
+  accordion:
+    critical:
+      title: "심각 (4개 취약점)"
+      entries:
+        - "크로스 사이트 스크립팅 (XSS) 노출 - CKV3_SAST_89"
+        - "비밀번호 미사용 또는 취약한 비밀번호 사용 - CKV3_SAST_71"
+        - "인젝션 공격에 취약한 LDAP 쿼리 - CKV3_SAST_61"
+        - "신뢰할 수 없는 데이터의 안전하지 않은 역직렬화 - CKV3_SAST_58"
+    high:
+      title: "높음 (42개 이상 취약점)"
+      entries:
+        - "SQL 인젝션에 노출된 요청 - CKV3_SAST_51"
+        - "동적 코드 실행 - CKV3_SAST_87"
+        - "경로 인젝션 - CKV3_SAST_86"
+        - "하드코딩된 비밀번호 사용 - CKV3_SAST_152"
+        - "취약한 암호화 알고리즘 사용 - CKV3_SAST_55"
+        - "그 외 37개 이상의 높은 심각도 문제..."
+    secrets:
+      title: "시크릿 탐지 (75개 이상 패턴)"
+      intro: "75개 이상 서비스에 대한 하드코딩된 자격 증명 포함:"
+      entries:
+        - "AWS 액세스 키 - CKV_SECRET_2"
+        - "OpenAI API 키 - CKV_SECRET_107"
+        - "Stripe 액세스 키 - CKV_SECRET_17"
+        - "GitHub 토큰 - CKV_SECRET_43"
+        - "개인 키 - CKV_SECRET_13"
+        - "그 외 70개 이상의 API 키 및 토큰"
+    license:
+      title: "라이선스 준수 테스트 (71개 패키지)"
+      intro: "포괄적인 SCA 및 보안 테스트를 위한 71개 PyGremlinBox 패키지 v1.4.6 (65개 다양한 라이선스 패키지 + 6개 악성코드 시뮬레이션 패키지) 포함:"
+      entries:
+        - "카피레프트 라이선스: AGPL (1.0/3.0 버전 제한 포함), GPL (2.0/3.0), LGPL (2.0/2.1/3.0)"
+        - "허용적 라이선스: MPL (1.1/2.0), EPL (1.0/2.0), EUPL (1.1/1.2/3.0)"
+        - "크리에이티브 커먼즈 변형: NC/ND/SA 제한이 있는 관할권 변형 (DE/FR/UK/JP/AT/IGO)"
+        - "하드웨어 라이선스: CERN OHL (S/W 2.0), TAPR OHL (1.0)"
+        - "비즈니스 라이선스: SSPL (1.0), MS-LPL, BUSL (1.1), PolyForm (비상업용/소규모 비즈니스)"
+        - "특수 라이선스: Copyleft Next (0.3.0/0.3.1), Hippocratic (2.1), Unlicense, 그 외 40개 이상의 라이선스 유형"
+        - "악성코드 시뮬레이션: 네트워크 지표, C2 비콘, 코드 난독화, 설치 실행, 자격 증명 수집, 크립토마이닝 지표"
+      footer: "이 패키지들은 다양한 패키지 유형에서 라이선스 정책을 감지, 분류 및 적용하고 악성코드 서명을 식별하는 SCA 도구의 능력을 종합적으로 테스트할 수 있게 합니다."
+    iac:
+      title: "IaC 보안 테스트 (30개 이상 구성 오류)"
+      intro: "Dockerfile.BrokenBank에는 보안 스캐너 검증을 위한 의도적인 IaC 구성 오류가 포함되어 있습니다:"
+      entries:
+        - "인증서 우회: curl insecure, wget no-check-certificate, pip trusted-host, npm strict-ssl false, git sslVerify false"
+        - "환경 변수: PYTHONHTTPSVERIFY=0, NODE_TLS_REJECT_UNAUTHORIZED=0"
+        - "패키지 관리자: apt force/unauthenticated, yum nogpgcheck/sslverify=0, rpm nosignature, apk allow-untrusted"
+        - "권한 문제: root로 실행, sudo 사용, chpasswd 자격 증명 노출"
+        - "하드코딩된 시크릿: ENV 명령어의 AWS 키, 데이터베이스 비밀번호, API 토큰"
+        - "보안 강화 누락: HEALTHCHECK 없음, WORKDIR 없음, 비root USER 없음, latest 기본 태그"
+      footer: "이 파일은 IaC 보안 도구로 스캔 가능하면서도 실수로 빌드되는 것을 방지하는 페일세이프 메커니즘을 포함합니다."
+  back_button: "홈으로 돌아가기"
+  cicd_badge: "CI/CD 준비 완료 애플리케이션"
 
 footer:
   banking_services_title: "뱅킹 서비스"

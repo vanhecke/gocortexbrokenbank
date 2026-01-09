@@ -95,6 +95,29 @@ sections:
   our_services_title: "Our Services"
   our_services_description: "Discover comprehensive banking solutions tailored to your financial goals"
 
+landing_service_cards:
+  personal_banking:
+    title: "Personal Banking"
+    description: "Access your personal netbank account dashboard and transaction history"
+    badge: "Available"
+    badge_type: "success"
+  business_banking:
+    title: "Business Banking"
+    description: "Offshore banking services and corporate financial solutions"
+    badge: "Available"
+    badge_type: "success"
+  investment_services:
+    title: "Investment Services"
+    description: "Exclusive investment opportunities with guaranteed returns"
+    badge: "HOT"
+    badge_type: "warning"
+  digital_services:
+    title: "Digital Services"
+    description: "Anonymous digital banking and cryptocurrency services"
+    badge: "Available"
+    badge_type: "success"
+  open_account_button: "Open New Account - No Verification Required"
+
 exploit_section:
   title: "Advanced Security Testing - Exploit Endpoints"
   description: "Java/Tomcat-based remote code execution endpoints for comprehensive penetration testing"
@@ -135,6 +158,79 @@ exploit_section:
 cta:
   title: "Ready to Start Banking?"
   description: "Join millions of customers who trust GoCortex Broken Bank for their financial needs"
+
+disclaimer:
+  page_title: "Security Information"
+  heading: "SECURITY INFORMATION"
+  version_prefix: "CI/CD Testing Application v"
+  alert_heading: "INTENTIONALLY VULNERABLE SOFTWARE"
+  do_not_use_heading: "DO NOT USE FOR:"
+  do_not_use_items:
+    - "Production environments"
+    - "Public-facing applications"
+    - "Real customer data processing"
+    - "External network scanning"
+    - "Learning how to write insecure code"
+  appropriate_uses_heading: "APPROPRIATE USES:"
+  appropriate_uses_items:
+    - "CI/CD security testing pipelines"
+    - "Automated security validation"
+    - "DevSecOps testing environments"
+    - "Educational security training"
+    - "Security tool benchmarking"
+  vulnerabilities_heading: "Implemented Vulnerabilities"
+  accordion:
+    critical:
+      title: "Critical Severity (4 vulnerabilities)"
+      entries:
+        - "Cross-site scripting (XSS) exposure - CKV3_SAST_89"
+        - "Insecure use of no password or weak password - CKV3_SAST_71"
+        - "LDAP queries vulnerable to injection attacks - CKV3_SAST_61"
+        - "Untrusted data unsafely deserialized - CKV3_SAST_58"
+    high:
+      title: "High Severity (42+ vulnerabilities)"
+      entries:
+        - "Request exposed to SQL injection - CKV3_SAST_51"
+        - "Dynamic code execution - CKV3_SAST_87"
+        - "Path injection - CKV3_SAST_86"
+        - "Hardcoded passwords are being used - CKV3_SAST_152"
+        - "Weak cryptographic algorithm used - CKV3_SAST_55"
+        - "And 37+ more high severity issues..."
+    secrets:
+      title: "Secrets Detection (75+ patterns)"
+      intro: "Includes hardcoded credentials for 75+ services:"
+      entries:
+        - "AWS Access Keys - CKV_SECRET_2"
+        - "OpenAI API Key - CKV_SECRET_107"
+        - "Stripe Access Key - CKV_SECRET_17"
+        - "GitHub Token - CKV_SECRET_43"
+        - "Private Keys - CKV_SECRET_13"
+        - "Plus 70+ additional API keys and tokens"
+    license:
+      title: "License Compliance Testing (71 packages)"
+      intro: "Includes 71 PyGremlinBox packages at v1.4.6 (65 varied license packages + 6 malware simulation packages) for comprehensive SCA and security testing:"
+      entries:
+        - "Copyleft Licenses: AGPL (1.0/3.0 with version restrictions), GPL (2.0/3.0), LGPL (2.0/2.1/3.0)"
+        - "Permissive Licenses: MPL (1.1/2.0), EPL (1.0/2.0), EUPL (1.1/1.2/3.0)"
+        - "Creative Commons Variants: Jurisdictional variants (DE/FR/UK/JP/AT/IGO) with NC/ND/SA restrictions"
+        - "Hardware Licenses: CERN OHL (S/W 2.0), TAPR OHL (1.0)"
+        - "Business Licenses: SSPL (1.0), MS-LPL, BUSL (1.1), PolyForm (Noncommercial/Small Business)"
+        - "Special Licenses: Copyleft Next (0.3.0/0.3.1), Hippocratic (2.1), Unlicense, and 40+ additional license types"
+        - "Malware Simulation: Network indicators, C2 beacon, code obfuscation, install execution, credential harvesting, cryptomining indicators"
+      footer: "These packages enable comprehensive testing of SCA tools' ability to detect, categorise, and enforce license policies and identify malware signatures across diverse package types."
+    iac:
+      title: "IaC Security Testing (30+ misconfigurations)"
+      intro: "Dockerfile.BrokenBank contains intentional IaC misconfigurations for security scanner validation:"
+      entries:
+        - "Certificate Bypasses: curl insecure, wget no-check-certificate, pip trusted-host, npm strict-ssl false, git sslVerify false"
+        - "Environment Variables: PYTHONHTTPSVERIFY=0, NODE_TLS_REJECT_UNAUTHORIZED=0"
+        - "Package Managers: apt force/unauthenticated, yum nogpgcheck/sslverify=0, rpm nosignature, apk allow-untrusted"
+        - "Privilege Issues: Running as root, sudo usage, chpasswd credential exposure"
+        - "Hardcoded Secrets: AWS keys, database passwords, API tokens in ENV instructions"
+        - "Missing Hardening: No HEALTHCHECK, no WORKDIR, no non-root USER, latest base tag"
+      footer: "This file includes a failsafe mechanism to prevent accidental builds whilst remaining scannable by IaC security tools."
+  back_button: "Back to Home"
+  cicd_badge: "CI/CD Ready Application"
 
 footer:
   banking_services_title: "Banking Services"

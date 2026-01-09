@@ -8,9 +8,9 @@ GoCortex Broken Bank is an intentionally vulnerable application designed specifi
 
 ![GoCortex Broken Bank Application](static/images/app-screenshot.png)
 
-## Dual-Server Architecture (Version 1.2.73)
+## Dual-Server Architecture
 
-GoCortex Broken Bank now features a **dual-server architecture** combining Python and Java technologies for comprehensive security testing:
+The application is split into two servers: a Flask service for SAST-style findings and a Tomcat service for realistic Java RCE testing.
 
 ### Flask/Gunicorn Server (Port 8888)
 - **Purpose**: SAST (Static Application Security Testing) endpoints
@@ -22,12 +22,12 @@ GoCortex Broken Bank now features a **dual-server architecture** combining Pytho
 - **Purpose**: Exploit endpoints for penetration testing and RCE validation
 - **Technology**: Apache Tomcat 8.5.0, OpenJDK 17, Spring Framework 5.3.0
 - **Coverage**: 6 critical RCE endpoints including Spring4Shell (CVE-2022-22965)
-- **Testing Focus**: Remote code execution, webshell deployment, Java-specific exploits
+- **Testing Focus**: Enterprise Java exploitation scenarios commonly targeted by DAST and RCE detection engines
 
 **Why Dual-Server Architecture?**
 
 Security scanners and penetration testing tools treat Tomcat differently from lightweight Python servers. By hosting exploit endpoints on Tomcat:
-- Enhanced detection rates for enterprise security tools
+- Improves detection rates in tools that treat Tomcat-based applications differently from lightweight Python services
 - Realistic Java/Spring vulnerability testing
 - Improved scanner recognition of critical RCE endpoints
 - Better alignment with real-world enterprise application stacks
@@ -37,19 +37,19 @@ Security scanners and penetration testing tools treat Tomcat differently from li
 This application is purpose-built for:
 - **Cortex Cloud Application Security Testing** - Validate your Cortex Cloud security policies
 - **CI/CD Pipeline Integration** - Test automated security scanning in DevSecOps workflows
-- **Security Tool Benchmarking** - Measure the effectiveness of application security testing tools
+- **Security Tool Benchmarking** - Sanity-check what different SAST and DAST tools actually flag in practice
 - **Educational Training** - Learn about common application security vulnerabilities in a controlled environment
 
 ## Security Vulnerabilities
 
 This application contains **intentionally vulnerable code** implementing multiple security flaws including:
 
-### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888) - Version 1.2.73
+### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888)
 
-**Endpoint Exploitability Audit**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_AUDIT.md](docs/ENDPOINTS_AUDIT.md)** which categorises all 42 endpoints by their actual exploitability level:
-- **21 Truly Exploitable** - Actually execute vulnerable code for hands-on penetration testing
-- **7 Partially Exploitable** - Execute code with limitations or simulated behaviour  
-- **14 Simulation Only** - Return configuration strings for SAST scanner detection
+**Endpoint Exploitability Guide**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_EXPLOITABILITY.md](docs/ENDPOINTS_EXPLOITABILITY.md)** which categorises all 42 endpoints by their actual exploitability level:
+- **24 Truly Exploitable** - Endpoints that genuinely execute vulnerable code, rather than returning static or simulated results
+- **6 Partially Exploitable** - Execute code with limitations or simulated behaviour  
+- **12 Simulation Only** - Return configuration strings for SAST scanner detection
 
 | Vulnerability Type | Endpoint | Description | Checkov Policy IDs |
 |-------------------|----------|-------------|-------------------|
@@ -144,7 +144,7 @@ class.module.classLoader.resources.context.parent.pipeline.first.directory=webap
 class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell
 ```
 
-### Comprehensive Secrets Detection (75+ Hardcoded Credentials)
+### Hardcoded Secrets for Scanner Validation (75+ values)
 
 | Secret Type | Description | Checkov Policy IDs | Count |
 |-------------|-------------|-------------------|-------|
@@ -265,7 +265,7 @@ GoCortex Broken Bank integrates **71 PyGremlinBox packages** (65 varied license 
 - **Version-Specific Restrictions** (AGPL 1.0 Only, 3.0 Only, or-later clauses)
 - **Creative Commons Variants** (NonCommercial, NoDerivatives, ShareAlike combinations)
 - Conflicting license compatibility matrices for policy validation
-- Hidden integration within normal dependencies for realistic testing
+- These packages are embedded within normal dependency chains so SCA tools must identify them under realistic conditions
 
 ### Security Testing URLs (Fictitious Threat Domains)
 
@@ -275,7 +275,7 @@ The application includes **5 fictitious threat domains** embedded throughout the
 |-------------|---------|----------|
 | **https://urlfiltering.paloaltonetworks.com/test-malware** | Official Palo Alto Networks test endpoint for malware filtering validation | app.py, config.py, secrets.py |
 | **malware.sigre.xyz** | Simulated malware domain for security testing purposes | app.py, config.py, secrets.py |
-| **hacker.sigre.xyz** | Test hacker domain for security validation | config.py, secrets.py, localise.yaml |
+| **hacker.sigre.xyz** | Test hacker domain for security validation | config.py, secrets.py, config/localise.yaml |
 | **c2.sigre.xyz** | Command and control test domain | app.py, config.py, secrets.py |
 | **botnet.sigre.xyz** | Botnet simulation domain for cybersecurity testing | app.py, config.py, secrets.py |
 
@@ -546,13 +546,13 @@ The following comprehensive testing examples cover all 42 Flask vulnerability en
 
 To trigger CI/CD security scans and test your Cortex Cloud Application policies:
 
-1. **Modify the `localise.yaml` file** - This is the primary file to edit when creating pull/merge requests
+1. The config/localise.yaml file is the recommended change surface for triggering CI/CD security scans
 2. **Create pull/merge requests** with changes to trigger your CI/CD pipeline
 3. **Monitor scan results** to validate your security policies are detecting the vulnerabilities
 
 ### Key Configuration File
 
-**`localise.yaml`** - The main configuration file for triggering CI/CD scans:
+config/localise.yaml - The main configuration file for triggering CI/CD scans:
 - Contains application branding and localisation settings
 - Includes banking service definitions
 - Features Australian-specific configuration (phone numbers, date formats)
@@ -574,7 +574,10 @@ banking_services:
 ```
 ├── app.py                 # Main Flask application with vulnerable endpoints
 ├── models.py             # Database models with intentional security flaws
-├── localise.yaml         # PRIMARY FILE FOR CI/CD TESTING
+├── config/               # Configuration files
+│   ├── localise.yaml    # PRIMARY FILE FOR CI/CD TESTING
+│   ├── logging.yaml     # SIEM log shipping configuration
+│   └── anomaly_seeds.yaml # Predictable demo anomalies
 ├── vulnerable_data/      # Hardcoded secrets and vulnerable configurations
 │   ├── config.py        # Insecure application configuration
 │   └── secrets.py       # Hardcoded API keys and credentials
@@ -605,7 +608,7 @@ banking_services:
 - **DO NOT connect to production databases or systems**
 - **Use only in isolated, controlled testing environments**
 
-This application contains **intentionally vulnerable code** and should **NEVER** be deployed where it could be accessed by unauthorised users.
+This repository is intentionally insecure. Deploy only in isolated environments and never expose it to unauthorised access.
 
 ## Getting Started
 
@@ -671,8 +674,8 @@ gunicorn --bind 0.0.0.0:8888 --workers 1 --reload main:app
 The application supports multiple locales through the `LOCALE` environment variable:
 
 **Supported Locales:**
-- `en` (English/Australian) - Default locale, uses `localise.yaml`
-- `kr` (Korean) - Uses `localise.yaml.kr` with Korean translations and ₩ currency symbol
+- `en` (English/Australian) - Default locale, uses config/localise.yaml
+- `kr` (Korean) - Uses config/localise.yaml.kr with Korean translations and Won currency symbol
 
 **Usage:**
 ```bash
@@ -687,8 +690,8 @@ LOCALE=kr docker run -d -p 8888:8888 -p 9999:8080 -e LOCALE=kr gocortex-broken-b
 ```
 
 **Fallback Behaviour:**
-- Unknown locale codes default to English (`localise.yaml`)
-- Missing locale files automatically fall back to `localise.yaml`
+- Unknown locale codes default to English (config/localise.yaml)
+- Missing locale files automatically fall back to config/localise.yaml
 - Locale is set at application startup (not per-request)
 
 **Locale-Specific Features:**
@@ -697,9 +700,184 @@ LOCALE=kr docker run -d -p 8888:8888 -p 9999:8080 -e LOCALE=kr gocortex-broken-b
 - Banking merchant names (Melbourne-focused for AU, Seoul-focused for KR)
 - All UI text and labels fully localised
 
+### SIEM Log Shipping
+
+Version 1.3.0 introduces HTTP POST-based log shipping to external SIEM platforms, enabling real-time security event analysis and demo scenarios with predictable anomalies.
+
+#### Log Types
+
+The application generates three distinct log streams:
+
+| Log Type | Description | Format |
+|----------|-------------|--------|
+| tomcat_access | Native Tomcat access logs for Java exploit endpoints | Apache Combined Log Format |
+| netbank_application | BBWAF security detection events from Flask endpoints | JSON with vendor/product branding |
+| netbank_auth | Authentication events (real user activity and simulated traffic) | JSON with simulated flag |
+
+#### Configuration
+
+Log shipping is configured via `config/logging.yaml`:
+
+```yaml
+endpoints:
+  tomcat_access:
+    url: ${LOG_ENDPOINT_TOMCAT_ACCESS}
+    auth:
+      type: bearer
+      token: ${LOG_AUTH_TOMCAT_ACCESS}
+  netbank_application:
+    url: ${LOG_ENDPOINT_NETBANK_APP}
+    auth:
+      type: bearer
+      token: ${LOG_AUTH_NETBANK_APP}
+  netbank_auth:
+    url: ${LOG_ENDPOINT_NETBANK_AUTH}
+    auth:
+      type: bearer
+      token: ${LOG_AUTH_NETBANK_AUTH}
+```
+
+**Environment Variables:**
+
+| Variable | Purpose |
+|----------|---------|
+| LOG_ENDPOINT_TOMCAT_ACCESS | HTTP endpoint URL for Tomcat access logs |
+| LOG_ENDPOINT_NETBANK_APP | HTTP endpoint URL for BBWAF application logs |
+| LOG_ENDPOINT_NETBANK_AUTH | HTTP endpoint URL for authentication logs |
+| LOG_AUTH_TOMCAT_ACCESS | Authentication token for tomcat_access endpoint |
+| LOG_AUTH_NETBANK_APP | Authentication token for netbank_application endpoint |
+| LOG_AUTH_NETBANK_AUTH | Authentication token for netbank_auth endpoint |
+
+**Default URL Fallback:**
+
+If individual endpoint URLs are not set via environment variables, the log shipper falls back to the `defaults` section in `config/logging.yaml`:
+
+```yaml
+defaults:
+  base_url: "https://api-MYTENANT.xdr.au.paloaltonetworks.com"
+  path: "/logs/v1/event"
+  product: "xsiam"
+```
+
+This allows you to configure a single base URL for all log types when using a unified SIEM endpoint.
+
+**Authentication Methods:**
+
+The `auth.type` field supports:
+- `none` - No authentication header
+- `header` - Custom header with raw token value (used by XSIAM)
+- `basic` - HTTP Basic authentication (base64 encoded)
+- `bearer` - Bearer token authentication (Authorization: Bearer token)
+
+Note: Cortex XSIAM uses the `header` type with the API key passed directly in the Authorization header without a "Bearer" prefix.
+
+#### Anomaly Seeding
+
+For demo and testing scenarios, the application seeds predictable anomalies at configurable intervals via `config/anomaly_seeds.yaml`:
+
+```yaml
+anomaly_config:
+  frequency_minutes: 10
+
+suspicious_ips:
+  - ip: "185.220.101.42"
+    label: "Known Tor exit node"
+    weight: 3
+  - ip: "91.240.118.172"
+    label: "Brute force origin"
+    weight: 2
+
+suspicious_user_agents:
+  - agent: "python-requests/2.25.1"
+    label: "Scripted access (Python)"
+    weight: 3
+  - agent: "sqlmap/1.5.2"
+    label: "SQL injection tool"
+    weight: 1
+
+normal_traffic:
+  countries:
+    - code: "AU"
+      weight: 70
+    - code: "KR"
+      weight: 20
+  success_rate_percent: 92
+```
+
+The anomaly seeding injects suspicious IPs and user agents into the simulated traffic stream at the configured frequency. Weights control the probability of each item being selected when an anomaly is injected.
+
+#### Background Traffic Generator
+
+The application includes a background thread that generates simulated authentication traffic:
+- Default rate: 4 events per minute (one every 15 seconds)
+- Mix of successful and failed login attempts
+- Random usernames generated via Faker library
+- Periodic anomaly injection based on configured frequency
+- All simulated events marked with `simulated: true` flag
+
+#### Log Format Examples
+
+**netbank_auth (JSON):**
+```json
+{
+  "timestamp": "2025-01-15T10:30:45.123Z",
+  "event_type": "authentication",
+  "username": "johnsmith",
+  "action": "login_attempt",
+  "success": true,
+  "source_ip": "203.45.67.89",
+  "user_agent": "Mozilla/5.0...",
+  "simulated": false
+}
+```
+
+**netbank_application (JSON):**
+```json
+{
+  "timestamp": "2025-01-15T10:31:02.456Z",
+  "vendor": "GoCortex",
+  "product": "BBWAF",
+  "event_type": "security_detection",
+  "endpoint": "/api/user/lookup",
+  "method": "POST",
+  "source_ip": "192.168.1.100",
+  "detection": "SQL Injection Attempt",
+  "severity": "high"
+}
+```
+
+**tomcat_access (Apache Combined):**
+```
+203.45.67.89 - - [15/Jan/2025:10:32:15 +0000] "POST /upload HTTP/1.1" 200 1234 "-" "Mozilla/5.0..."
+```
+
+#### Cortex XSIAM Setup
+
+To configure log shipping to Palo Alto Networks Cortex XSIAM:
+
+1. Create an HTTP Log Collector in XSIAM:
+   - Navigate to Settings - Data Collection - HTTP Log Collector
+   - Create a new collector and note the endpoint URL and API key
+
+2. Set environment variables:
+   ```bash
+   export LOG_ENDPOINT_NETBANK_AUTH="https://api-{tenant}.xdr.{region}.paloaltonetworks.com/logs/v1/event"
+   export LOG_AUTH_NETBANK_AUTH="your-xsiam-api-key"
+   ```
+
+3. Test connectivity with curl:
+   ```bash
+   curl -X POST https://api-{tenant}.xdr.{region}.paloaltonetworks.com/logs/v1/event \
+     -H 'Authorization: {api_key}' \
+     -H 'Content-Type: text/plain' \
+     -d '{"test": "connection", "timestamp": 1609100113039}'
+   ```
+
+The XSIAM HTTP Log Collector automatically detects JSON format and parses event fields for querying.
+
 ### Docker Security Testing
 
-The included `Dockerfile` contains intentional vulnerabilities for comprehensive security testing:
+The Dockerfile intentionally violates common container hardening policies to validate IaC and container security controls:
 
 - **Vulnerable Base Image**: Uses Python 3.11-bookworm
 - **Insecure Dependencies**: Pinned to vulnerable package versions (Flask 2.0.1, PyJWT 1.7.1, Tomcat 8.5.0, Spring 5.3.0, etc.)
@@ -715,6 +893,27 @@ The included `Dockerfile` contains intentional vulnerabilities for comprehensive
 
 **Note**: External services (MySQL, PostgreSQL, MongoDB, Redis, LDAP) are **mocked within the Flask application** rather than deployed as separate containers. This provides comprehensive vulnerability testing whilst maintaining a single-container deployment for simplicity.
 
+### IaC Security Testing (Dockerfile.BrokenBank)
+
+The repository includes `Dockerfile.BrokenBank`, a dedicated file containing intentional Infrastructure-as-Code (IaC) misconfigurations for security scanner validation. This file is scanned by IaC security tools but includes a failsafe mechanism that prevents accidental builds.
+
+| Policy Category | Misconfigurations Included | Severity |
+|-----------------|---------------------------|----------|
+| Certificate Validation Bypasses | curl -k/--insecure, wget --no-check-certificate, pip --trusted-host, PYTHONHTTPSVERIFY=0, NODE_TLS_REJECT_UNAUTHORIZED=0, npm strict-ssl false, git http.sslVerify false | HIGH |
+| Package Manager Insecurities | apt --force-yes/--allow-unauthenticated, yum --nogpgcheck, yum sslverify=0, rpm --nosignature, apk --allow-untrusted | HIGH |
+| Privilege Escalation | Running as root, sudo usage, chpasswd credential setting | HIGH |
+| Hardcoded Credentials | AWS keys, database passwords, API tokens, JWT secrets in ENV | HIGH |
+| Missing Security Hardening | No HEALTHCHECK, no WORKDIR, no non-root USER instruction | MEDIUM |
+| Base Image Issues | Using :latest tag, deprecated MAINTAINER instruction | MEDIUM |
+| Network Exposure | EXPOSE 22 (SSH), database ports exposed | MEDIUM |
+| Insecure Patterns | ADD instead of COPY, curl pipe to shell, multiple RUN layers | MEDIUM |
+
+Key Features:
+- 30+ distinct IaC policy violations for comprehensive scanner coverage
+- Failsafe mechanism prevents accidental container builds
+- Vendor-neutral documentation without scanner-specific references
+- Covers certificate validation, package managers, credentials, and hardening gaps
+
 #### Container Management
 ```bash
 # View logs
@@ -729,6 +928,29 @@ docker rm gocortex-broken-bank
 # Access container shell
 docker exec -it gocortex-broken-bank bash
 ```
+
+### Kubernetes Deployment
+
+For Kubernetes environments, a deployment manifest is provided in `k8s/gocortexbrokenbank.yaml`. This manifest creates a dedicated namespace and deploys the pre-built Docker Hub image.
+
+```bash
+# Deploy to Kubernetes
+kubectl apply -f k8s/gocortexbrokenbank.yaml
+
+# Verify deployment
+kubectl get pods -n gocortexbrokenbank
+
+# View logs
+kubectl logs -f -l app=gocortexbrokenbank -n gocortexbrokenbank
+
+# Access container shell (replace POD_NAME with actual pod name from get pods)
+kubectl exec -it POD_NAME -n gocortexbrokenbank -- bash
+
+# Remove deployment
+kubectl delete -f k8s/gocortexbrokenbank.yaml
+```
+
+The manifest exposes Flask on port 8888 and Tomcat on port 9999 via hostPort bindings. Hardcoded secrets and environment variables are intentional to maintain the vulnerable application profile for security training.
 
 ## Licence
 
