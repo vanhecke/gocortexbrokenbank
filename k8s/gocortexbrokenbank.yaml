@@ -1,0 +1,58 @@
+# GoCortex Broken Bank - Kubernetes Deployment Manifest
+# 
+# INTENTIONALLY VULNERABLE: This manifest contains hardcoded secrets and
+# hostPort bindings by design for security training purposes. Do not
+# "harden" these values as they mirror the vulnerable application profile.
+#
+# Usage:
+#   kubectl apply -f k8s/gocortexbrokenbank.yaml
+#   kubectl get pods -n gocortexbrokenbank
+#   kubectl logs -f deployment/gocortexbrokenbank -n gocortexbrokenbank
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gocortexbrokenbank
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gocortexbrokenbank
+  namespace: gocortexbrokenbank
+  labels:
+    app: gocortexbrokenbank
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gocortexbrokenbank
+  template:
+    metadata:
+      labels:
+        app: gocortexbrokenbank
+    spec:
+      containers:
+        - name: gocortexbrokenbank
+          image: gocortexio/gocortexbrokenbank:latest
+          imagePullPolicy: Always
+          ports:
+            # Flask app
+            - name: flask
+              containerPort: 8888
+              hostPort: 8888
+              protocol: TCP
+
+            # Tomcat app (internal 8080, external 9999)
+            - name: tomcat
+              containerPort: 8080
+              hostPort: 9999
+              protocol: TCP
+          env:
+            - name: SESSION_SECRET
+              value: "hardcoded-docker-secret-key"
+            - name: DATABASE_URL
+              value: "sqlite:///app/instance/gocortexbrokenbank.db"
+            - name: FLASK_ENV
+              value: "production"
+            - name: LOCALE
+              value: "en"  # Supported: en (English/Australian), kr (Korean)

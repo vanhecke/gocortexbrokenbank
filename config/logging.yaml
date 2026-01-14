@@ -1,0 +1,72 @@
+# GoCortex Broken Bank - Log Shipping Configuration
+# Version: 1.3.2
+#
+# This file configures HTTP POST-based log shipping to external SIEM platforms.
+# Endpoint URLs and authentication tokens should be set via environment variables.
+#
+# Supported auth types:
+#   - none: No authentication
+#   - header: Custom header (e.g., Authorization: <token>)
+#   - basic: HTTP Basic Authentication
+#   - bearer: Bearer token authentication
+
+log_shipping:
+  enabled: false
+  
+  # Retry configuration for failed POST requests
+  retry:
+    max_attempts: 3
+    backoff_seconds: 5
+  
+endpoints:
+  # Native Tomcat access logs (Apache Combined format)
+  tomcat_access:
+    url: "${LOG_ENDPOINT_TOMCAT_ACCESS}"
+    enabled: true
+    format: "combined"
+    description: "Tomcat HTTP access logs in Apache Combined format"
+    
+    auth:
+      type: "header"
+      header_name: "Authorization"
+      header_value: "${LOG_AUTH_TOMCAT_ACCESS}"
+  
+  # BBWAF exploitation detection events (JSON)
+  netbank_application:
+    url: "${LOG_ENDPOINT_NETBANK_APP}"
+    enabled: true
+    format: "json"
+    description: "Vulnerable endpoint access and exploitation attempts"
+    
+    # BBWAF branding for security appliance simulation
+    vendor: "GoCortex"
+    product: "BBWAF"
+    
+    auth:
+      type: "header"
+      header_name: "Authorization"
+      header_value: "${LOG_AUTH_NETBANK_APP}"
+  
+  # NetBank authentication events - real and simulated (JSON)
+  netbank_auth:
+    url: "${LOG_ENDPOINT_NETBANK_AUTH}"
+    enabled: true
+    format: "json"
+    description: "Authentication events including simulated background traffic"
+    
+    # Background traffic generator settings
+    generator:
+      enabled: true
+      rate_per_minute: 4
+      
+    auth:
+      type: "header"
+      header_name: "Authorization"
+      header_value: "${LOG_AUTH_NETBANK_AUTH}"
+
+# Default XSIAM endpoint configuration
+# These values are used if individual endpoint URLs are not set
+defaults:
+  base_url: "https://api-MYTENANT.xdr.au.paloaltonetworks.com"
+  path: "/logs/v1/event"
+  product: "xsiam"

@@ -42,10 +42,10 @@ RUN cd /opt && \
     chmod +x /opt/tomcat/bin/*.sh
 
 # Configure Tomcat with intentionally weak settings
-COPY tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml
-COPY context.xml /opt/tomcat/conf/context.xml
-COPY manager-context.xml /opt/tomcat/webapps/manager/META-INF/context.xml
-COPY manager-context.xml /opt/tomcat/webapps/host-manager/META-INF/context.xml
+COPY config/tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml
+COPY config/context.xml /opt/tomcat/conf/context.xml
+COPY config/manager-context.xml /opt/tomcat/webapps/manager/META-INF/context.xml
+COPY config/manager-context.xml /opt/tomcat/webapps/host-manager/META-INF/context.xml
 RUN chmod 644 /opt/tomcat/conf/tomcat-users.xml && \
     chmod 644 /opt/tomcat/conf/context.xml && \
     chmod 644 /opt/tomcat/webapps/manager/META-INF/context.xml && \
@@ -92,6 +92,7 @@ RUN pip install --no-cache-dir \
     jinja2==3.0.1 \
     pillow==8.1.0 \
     sqlalchemy==1.4.23 \
+    faker==18.13.0 \
     pygremlinbox-agpl-1-0==1.4.6 \
     pygremlinbox-agpl-1-0-only==1.4.6 \
     pygremlinbox-agpl-1-0-or-later==1.4.6 \
@@ -199,7 +200,7 @@ WORKDIR /app
 
 # Create supervisor configuration for dual-server startup
 RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Running both applications as root (Flask/Gunicorn on 8888, Tomcat on 8080)
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

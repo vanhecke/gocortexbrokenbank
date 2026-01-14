@@ -111,11 +111,11 @@
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <i data-feather="user" class="text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Personal Banking</h5>
+                                    <h5 class="card-title mb-0">{{ locale.landing_service_cards.personal_banking.title }}</h5>
                                 </div>
-                                <p class="card-text text-muted mb-3">Access your personal netbank account dashboard and transaction history</p>
+                                <p class="card-text text-muted mb-3">{{ locale.landing_service_cards.personal_banking.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success">Available</span>
+                                    <span class="badge bg-{{ locale.landing_service_cards.personal_banking.badge_type }}">{{ locale.landing_service_cards.personal_banking.badge }}</span>
                                     <i data-feather="arrow-right" class="text-primary"></i>
                                 </div>
                             </div>
@@ -131,11 +131,11 @@
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <i data-feather="briefcase" class="text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Business Banking</h5>
+                                    <h5 class="card-title mb-0">{{ locale.landing_service_cards.business_banking.title }}</h5>
                                 </div>
-                                <p class="card-text text-muted mb-3">Offshore banking services and corporate financial solutions</p>
+                                <p class="card-text text-muted mb-3">{{ locale.landing_service_cards.business_banking.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success">Available</span>
+                                    <span class="badge bg-{{ locale.landing_service_cards.business_banking.badge_type }}">{{ locale.landing_service_cards.business_banking.badge }}</span>
                                     <i data-feather="arrow-right" class="text-primary"></i>
                                 </div>
                             </div>
@@ -151,11 +151,11 @@
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <i data-feather="trending-up" class="text-warning me-2"></i>
-                                    <h5 class="card-title mb-0">Investment Services</h5>
+                                    <h5 class="card-title mb-0">{{ locale.landing_service_cards.investment_services.title }}</h5>
                                 </div>
-                                <p class="card-text text-muted mb-3">Exclusive investment opportunities with guaranteed returns</p>
+                                <p class="card-text text-muted mb-3">{{ locale.landing_service_cards.investment_services.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-warning text-dark">HOT</span>
+                                    <span class="badge bg-{{ locale.landing_service_cards.investment_services.badge_type }} {% if locale.landing_service_cards.investment_services.badge_type == 'warning' %}text-dark{% endif %}">{{ locale.landing_service_cards.investment_services.badge }}</span>
                                     <i data-feather="arrow-right" class="text-warning"></i>
                                 </div>
                             </div>
@@ -171,11 +171,11 @@
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <i data-feather="smartphone" class="text-success me-2"></i>
-                                    <h5 class="card-title mb-0">Digital Services</h5>
+                                    <h5 class="card-title mb-0">{{ locale.landing_service_cards.digital_services.title }}</h5>
                                 </div>
-                                <p class="card-text text-muted mb-3">Anonymous digital banking and cryptocurrency services</p>
+                                <p class="card-text text-muted mb-3">{{ locale.landing_service_cards.digital_services.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success">Available</span>
+                                    <span class="badge bg-{{ locale.landing_service_cards.digital_services.badge_type }}">{{ locale.landing_service_cards.digital_services.badge }}</span>
                                     <i data-feather="arrow-right" class="text-success"></i>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
             <div class="col-12 text-center">
                 <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">
                     <i data-feather="user-plus" class="me-2"></i>
-                    Open New Account - No Verification Required
+                    {{ locale.landing_service_cards.open_account_button }}
                 </a>
             </div>
         </div>
