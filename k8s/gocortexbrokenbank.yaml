@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: GoCortexIO
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# GoCortex Broken Bank - Kubernetes Deployment Manifest
+# GoCortex Broken Bank - Kubernetes Deployment Manifest for OKE
 # 
 # INTENTIONALLY VULNERABLE: This manifest contains hardcoded secrets and
-# hostPort bindings by design for security training purposes. Do not
-# "harden" these values as they mirror the vulnerable application profile.
+# insecure configurations by design for security training purposes.
 #
 # Usage:
 #   kubectl apply -f k8s/gocortexbrokenbank.yaml
@@ -36,19 +35,16 @@ spec:
     spec:
       containers:
         - name: gocortexbrokenbank
-          image: gocortexio/gocortexbrokenbank:latest
+          image: joris2000/gocortexbrokenbank:latest
           imagePullPolicy: Always
           ports:
             # Flask app
             - name: flask
               containerPort: 8888
-              hostPort: 8888
               protocol: TCP
-
-            # Tomcat app (internal 8080, external 9999)
+            # Tomcat app (internal 8080)
             - name: tomcat
               containerPort: 8080
-              hostPort: 9999
               protocol: TCP
           env:
             - name: SESSION_SECRET
@@ -58,4 +54,45 @@ spec:
             - name: FLASK_ENV
               value: "production"
             - name: LOCALE
-              value: "en"  # Supported: en (English/Australian), kr (Korean)
+              value: "en"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gocortexbrokenbank-flask
+  namespace: gocortexbrokenbank
+  labels:
+    app: gocortexbrokenbank
+spec:
+  type: LoadBalancer
+  selector:
+    app: gocortexbrokenbank
+  ports:
+    - name: flask
+      port: 8888
+      targetPort: 8888
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gocortexbrokenbank-tomcat
+  namespace: gocortexbrokenbank
+  labels:
+    app: gocortexbrokenbank
+spec:
+  type: LoadBalancer
+  selector:
+    app: gocortexbrokenbank
+  ports:
+    - name: tomcat
+      port: 9999
+      targetPort: 8080
+      protocol: TCP
