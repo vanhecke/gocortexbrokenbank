@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank Localisation Configuration
 country_code: "AU"
 currency_symbol: "$"

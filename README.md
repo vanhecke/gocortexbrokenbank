@@ -47,9 +47,9 @@ This application contains **intentionally vulnerable code** implementing multipl
 ### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888)
 
 **Endpoint Exploitability Guide**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_EXPLOITABILITY.md](docs/ENDPOINTS_EXPLOITABILITY.md)** which categorises all 42 endpoints by their actual exploitability level:
-- **24 Truly Exploitable** - Endpoints that genuinely execute vulnerable code, rather than returning static or simulated results
+- **30 Truly Exploitable** - Endpoints that genuinely execute vulnerable code, rather than returning static or simulated results
 - **6 Partially Exploitable** - Execute code with limitations or simulated behaviour  
-- **12 Simulation Only** - Return configuration strings for SAST scanner detection
+- **6 Simulation Only** - Return configuration strings for SAST scanner detection
 
 | Vulnerability Type | Endpoint | Description | Checkov Policy IDs |
 |-------------------|----------|-------------|-------------------|
@@ -67,7 +67,7 @@ This application contains **intentionally vulnerable code** implementing multipl
 | **Path Traversal** | `/file` | Directory traversal attack | CKV3_SAST_86, CKV3_SAST_173, CKV3_SAST_169 |
 | **Wildcard Injection** | `/wildcard` | User-controlled glob patterns | CKV3_SAST_170 |
 | **NoSQL Injection** | `/mongo` | MongoDB query injection | CKV3_SAST_52 |
-| **Weak Database Authentication** | `/database` | Hardcoded credentials | CKV3_SAST_71 |
+| **Weak Database Authentication + SQL Injection** | `/database` | Hardcoded credentials, raw SQL execution | CKV3_SAST_71, CWE-89 |
 | **JWT Without Verification** | `/token` | Unsigned JWT processing | CKV3_SAST_54 |
 | **Improper Access Control** | `/admin` | Weak authorisation | CKV3_SAST_97 |
 | **JSON Code Injection** | `/json` | Eval-based JSON parsing | CKV3_SAST_82 |
@@ -700,6 +700,47 @@ LOCALE=kr docker run -d -p 8888:8888 -p 9999:8080 -e LOCALE=kr gocortex-broken-b
 - Banking merchant names (Melbourne-focused for AU, Seoul-focused for KR)
 - All UI text and labels fully localised
 
+### Attack Simulation Capabilities
+
+Version 1.3.6 introduces comprehensive chained attack validation with 7 multi-step attack scenarios modelled on real-world breaches (MOVEit, Okta, Ivanti). See also BB-REQ-012 (Exposed Local Git Repository) for demonstrating data exfiltration and credential theft scenarios.
+
+#### BB-REQ-012: Exposed Local Git Repository
+
+The application creates a vulnerable git repository at startup containing fictional intellectual property and planted secrets for security testing.
+
+**Repository Location:**
+```
+<project_root>/data/projects/mars-banking-initiative/
+```
+
+**Contents:**
+- Project Ares - Fictional Mars Banking Initiative (GoCortex IO and SimonSigre.com collaboration)
+- Source code modules: SpaceATM, Mars Gateway, Orbital Auth, Quantum Ledger
+- Planted secrets: AWS keys, API tokens, SSH keys, database passwords, JWT secrets
+- Confidential documents: Financial projections, patent strategy
+
+**Exploitation via Command Injection:**
+```bash
+# Discover the repository (find .git directories)
+curl "http://localhost:9999/exploit-app/execute?cmd=find+.+-name+.git+-type+d+2>/dev/null"
+
+# Extract credentials (path: ./data/projects/mars-banking-initiative/)
+curl "http://localhost:9999/exploit-app/execute?cmd=cat+./data/projects/mars-banking-initiative/config/credentials.json"
+
+# Clone for exfiltration
+curl "http://localhost:9999/exploit-app/execute?cmd=git+clone+./data/projects/mars-banking-initiative+/tmp/stolen"
+```
+
+**MITRE ATT&CK Coverage:**
+
+| Technique | ID | Description |
+|-----------|-----|-------------|
+| Data from Local System | T1005 | Accessing local files containing sensitive data |
+| Unsecured Credentials | T1552 | Credentials stored in configuration files |
+| Data from Information Repositories | T1213 | Source code and documentation theft |
+
+For detailed exploitation scenarios, see [ENDPOINTS_EXPLOITABILITY.md](docs/ENDPOINTS_EXPLOITABILITY.md#bb-req-012-exposed-local-git-repository).
+
 ### SIEM Log Shipping
 
 Version 1.3.0 introduces HTTP POST-based log shipping to external SIEM platforms, enabling real-time security event analysis and demo scenarios with predictable anomalies.
@@ -954,8 +995,12 @@ The manifest exposes Flask on port 8888 and Tomcat on port 9999 via hostPort bin
 
 ## Licence
 
-This software is provided for **security testing and educational purposes only**. Use in accordance with your organisation's security testing policies and applicable laws.
+This project is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). See the LICENSE file for the full licence text.
+
+This software is provided for security testing and educational purposes only. Use in accordance with your organisation's security testing policies and applicable laws.
+
+Third-party components in static/vendor retain their original licences (MIT for Bootstrap and Feather Icons).
 
 ---
 
-**Remember**: This is a deliberately vulnerable application. Handle with appropriate security controls and never expose to production environments.
+Remember: This is a deliberately vulnerable application. Handle with appropriate security controls and never expose to production environments.

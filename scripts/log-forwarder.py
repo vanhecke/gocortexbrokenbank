@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank - Tomcat Log Forwarder
-# Version: 1.3.2
+# Version: 1.3.6
 #
 # This script tails Tomcat access logs and forwards them to a configured
 # HTTP endpoint for SIEM ingestion. The logs are shipped in their native

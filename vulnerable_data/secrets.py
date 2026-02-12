@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # Intentionally vulnerable secrets file for CI/CD security testing
 # This file contains various hardcoded credentials and API keys for automated security validation
 

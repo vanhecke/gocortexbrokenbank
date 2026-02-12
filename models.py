@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import os
 from app import db
 from flask_login import UserMixin

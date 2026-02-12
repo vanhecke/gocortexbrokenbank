@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: GoCortexIO
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 package com.gocortex.payload;
 
 import java.io.*;

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank - Dual-Server Architecture
 # Flask/Gunicorn (port 8888) for SAST testing + Tomcat (port 9999) for exploit endpoints
 services:

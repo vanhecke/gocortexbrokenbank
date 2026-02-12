@@ -1,5 +1,7 @@
 #!/bin/bash
-
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank Deployment Script
 # Intentionally vulnerable banking application for CI/CD security testing
 

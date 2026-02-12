@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Project Ares - Mars Banking Initiative
+# Python Dependencies
+
+# Core Framework
+flask==2.3.2
+gunicorn==21.2.0
+uvicorn==0.23.2
+
+# Database
+sqlalchemy==2.0.20
+psycopg2-binary==2.9.7
+redis==4.6.0
+
+# Authentication
+pyjwt==2.8.0
+cryptography==41.0.3
+passlib==1.7.4
+bcrypt==4.0.1
+
+# API Clients
+requests==2.31.0
+httpx==0.24.1
+aiohttp==3.8.5
+
+# AWS SDK
+boto3==1.28.40
+botocore==1.31.40
+
+# Monitoring
+datadog==0.47.0
+sentry-sdk==1.29.2
+
+# Biometrics (custom)
+# mars-biometrics==0.9.0  # Internal package
+
+# Quantum Ledger (custom)
+# qdcp-core==0.5.0  # Internal package
+
+# Development
+pytest==7.4.0
+black==23.7.0
+mypy==1.5.1

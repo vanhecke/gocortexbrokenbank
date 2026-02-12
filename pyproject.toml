@@ -1,7 +1,8 @@
 [project]
 name = "gocortexbrokenbank"
-version = "1.3.2"
+version = "1.3.6"
 description = "GoCortex Broken Bank - Intentionally vulnerable banking application for CI/CD security testing and educational purposes"
+license = "AGPL-3.0-or-later"
 authors = [
     {name = "Simon Sigre", email = "simon.sigre@gocortex.com"},
 ]

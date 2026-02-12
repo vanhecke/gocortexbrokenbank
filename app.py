@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import os
 import yaml
 import logging
@@ -46,7 +49,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Suppress Flask-SQLAlchem
 db.init_app(app)
 
 # Application version
-APP_VERSION = "1.3.2"
+APP_VERSION = "1.3.6"
 
 # Testing URLs for cybersecurity validation purposes only - these are fictitious endpoints
 # used by automated security scanners to validate URL filtering and threat detection capabilities
@@ -82,6 +85,92 @@ def load_localisation():
             return {}
 
 localisation = load_localisation()
+
+# Setup Mars Banking Initiative repository for BB-REQ-012 (Exposed Git Repository)
+def setup_mars_repo():
+    """
+    Create the Mars Banking Initiative git repository for security testing.
+    Implements BB-REQ-012: Exposed Local Git Repository capability.
+    Creates realistic commit history simulating development progression.
+    """
+    import subprocess
+    import shutil
+    import os
+    from pathlib import Path
+    from datetime import datetime, timedelta
+    
+    target = Path(__file__).parent / "data" / "projects" / "mars-banking-initiative"
+    template = Path(__file__).parent / "vulnerable_data" / "mars_banking_initiative"
+    
+    # Skip if already exists with .git directory
+    if (target / ".git").exists():
+        return
+    
+    # Commit history simulating realistic development
+    commits = [
+        {"msg": "Initial commit - Project Ares scaffolding", "author": "Eleanor Blackwood", "email": "eleanor.blackwood@gocortex.io", "days": 180, "files": ["README.md", "requirements.txt", ".gitignore"]},
+        {"msg": "Add SpaceATM core module with dispensing logic", "author": "Marcus Chen", "email": "marcus.chen@gocortex.io", "days": 150, "files": ["src/__init__.py", "src/space_atm.py"]},
+        {"msg": "Implement Mars Gateway relay system", "author": "Marcus Chen", "email": "marcus.chen@gocortex.io", "days": 120, "files": ["src/mars_gateway.py"]},
+        {"msg": "Add orbital authentication for spacesuit biometrics", "author": "Priya Sharma", "email": "priya.sharma@gocortex.io", "days": 90, "files": ["src/orbital_auth.py"]},
+        {"msg": "Implement quantum ledger with QDCP", "author": "Eleanor Blackwood", "email": "eleanor.blackwood@gocortex.io", "days": 60, "files": ["src/quantum_ledger.py"]},
+        {"msg": "Add production configuration (DO NOT COMMIT - oops)", "author": "Marcus Chen", "email": "marcus.chen@gocortex.io", "days": 45, "files": ["config/production.yaml", "config/.env.production"]},
+        {"msg": "Add credentials file for deployment automation", "author": "Simon Sigre", "email": "simon@simonsigre.com", "days": 30, "files": ["config/credentials.json"]},
+        {"msg": "Add SSH keys for Mars Gateway deployment", "author": "Marcus Chen", "email": "marcus.chen@gocortex.io", "days": 25, "files": [".ssh/id_rsa", ".ssh/id_rsa.pub"]},
+        {"msg": "Add financial projections and patent strategy docs", "author": "Simon Sigre", "email": "simon@simonsigre.com", "days": 15, "files": ["docs/FINANCIAL_PROJECTIONS.md", "docs/PATENT_STRATEGY.md"]},
+    ]
+    
+    try:
+        # Create target directory
+        target.mkdir(parents=True, exist_ok=True)
+        
+        # Copy template files
+        if template.exists():
+            for item in template.iterdir():
+                dest = target / item.name
+                if item.is_dir():
+                    if dest.exists():
+                        shutil.rmtree(dest)
+                    shutil.copytree(item, dest)
+                else:
+                    shutil.copy2(item, dest)
+        
+        # Initialise git repository
+        subprocess.run(["git", "init"], cwd=target, capture_output=True)
+        subprocess.run(["git", "config", "user.email", "ares@gocortex.io"], cwd=target, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "Ares Build System"], cwd=target, capture_output=True)
+        
+        # Create commits with realistic history
+        for commit in commits:
+            commit_date = datetime.now() - timedelta(days=commit["days"])
+            date_str = commit_date.strftime("%Y-%m-%dT%H:%M:%S")
+            
+            # Add files for this commit
+            for file_path in commit["files"]:
+                full_path = target / file_path
+                if full_path.exists():
+                    subprocess.run(["git", "add", file_path], cwd=target, capture_output=True)
+            
+            # Create commit with author and date
+            env = os.environ.copy()
+            env.update({
+                "GIT_AUTHOR_NAME": commit["author"],
+                "GIT_AUTHOR_EMAIL": commit["email"],
+                "GIT_AUTHOR_DATE": date_str,
+                "GIT_COMMITTER_NAME": commit["author"],
+                "GIT_COMMITTER_EMAIL": commit["email"],
+                "GIT_COMMITTER_DATE": date_str
+            })
+            subprocess.run(["git", "commit", "-m", commit["msg"], "--allow-empty"], cwd=target, capture_output=True, env=env)
+        
+        logging.info(f"Mars Banking Initiative repository created at {target} with {len(commits)} commits")
+    except Exception as e:
+        logging.warning(f"Failed to setup Mars repo: {e}")
+
+# Initialise Mars repo on startup
+try:
+    setup_mars_repo()
+except Exception as e:
+    logging.warning(f"Mars repo setup skipped: {e}")
 
 # Apply BBWAF logging middleware for SIEM integration
 bbwaf_logging_middleware(app)
@@ -277,16 +366,17 @@ def deserialize_data():
 # Intentionally vulnerable: SSRF (CKV3_SAST_189)
 @app.route('/fetch')
 def fetch_url():
-    """Intentionally vulnerable SSRF endpoint"""
+    """Intentionally vulnerable SSRF endpoint - TRULY EXPLOITABLE"""
     url = request.args.get('url', '')
     if url:
         # Vulnerable: Direct URL request without validation
         import requests
         try:
-            response = requests.get(url, verify=False)  # Also CKV3_SAST_186
-            return f"Fetched content from: {url}"
-        except:
-            return f"Failed to fetch: {url}"
+            response = requests.get(url, verify=False, timeout=5)  # Also CKV3_SAST_186
+            # TRULY EXPLOITABLE: Return actual fetched content to prove SSRF works
+            return f"Fetched content from: {url}\n\n{response.text[:4000]}"
+        except Exception as e:
+            return f"Failed to fetch: {url} - {e}"
     return "Fetch endpoint - provide ?url=http://example.com"
 
 # Intentionally vulnerable: XXE (CKV3_SAST_50, CKV3_SAST_90)
@@ -331,16 +421,31 @@ def mongo_query():
 # Intentionally vulnerable: JWT without verification (CKV3_SAST_54)
 @app.route('/token')
 def decode_token():
-    """Intentionally vulnerable JWT decoder"""
+    """Intentionally vulnerable JWT decoder - TRULY EXPLOITABLE"""
     token = request.args.get('jwt', '')
     if token:
         # Vulnerable: JWT decoded without signature verification
         import jwt
         try:
-            payload = jwt.decode(token, verify=False, algorithms=['HS256'])  # No verification
-            return f"JWT payload: {payload}"
-        except:
-            return "Invalid JWT format"
+            # TRULY EXPLOITABLE: Decode with options to skip verification
+            payload = jwt.decode(token, options={"verify_signature": False}, algorithms=['HS256', 'none'])
+            return f"JWT payload (decoded without verification): {payload}"
+        except Exception as e:
+            # Try base64 decode as fallback to demonstrate vulnerability
+            try:
+                import base64
+                parts = token.split('.')
+                if len(parts) >= 2:
+                    # Pad the base64 string if needed
+                    payload_b64 = parts[1]
+                    padding = 4 - len(payload_b64) % 4
+                    if padding != 4:
+                        payload_b64 += '=' * padding
+                    payload_json = base64.urlsafe_b64decode(payload_b64).decode('utf-8')
+                    return f"JWT payload (base64 decoded - no verification): {payload_json}"
+            except:
+                pass
+            return f"Invalid JWT format: {e}"
     return "JWT endpoint - provide ?jwt=token"
 
 # Intentionally vulnerable: Email sending (CKV3_SAST_63)
@@ -435,11 +540,12 @@ def access_none():
 # Intentionally vulnerable: Wildcard usage (CKV3_SAST_170)
 @app.route('/wildcard')
 def wildcard_usage():
-    """Intentionally vulnerable wildcard usage"""
+    """Intentionally vulnerable wildcard usage - TRULY EXPLOITABLE"""
     pattern = request.args.get('pattern', '*.txt')
     import glob
-    # Vulnerable: User-controlled wildcard pattern
-    files = glob.glob(f"/tmp/{pattern}")
+    # TRULY EXPLOITABLE: User-controlled wildcard pattern with NO prefix restriction
+    # Attacker can enumerate entire filesystem with patterns like /etc/* or /*
+    files = glob.glob(pattern)
     return f"Files matching pattern: {files}"
 
 # Intentionally vulnerable: Improper access control (CKV3_SAST_97)
@@ -560,14 +666,29 @@ def download_ml_model():
 # Intentionally vulnerable: PyTorch missing hash check (CKV3_SAST_194)
 @app.route('/pytorch')
 def pytorch_vulnerability():
-    """Intentionally vulnerable PyTorch model loading"""
+    """Intentionally vulnerable PyTorch model loading without integrity check"""
+    # Testing endpoints for security scanning purposes only - these domains are fictitious
+    test_malware_domains = ["malware.sigre.xyz", "hacker.sigre.xyz"]
+    model_url = request.args.get('url', '')
     model_path = request.args.get('path', '/tmp/model.pth')
-    # Vulnerable: Loading PyTorch model without hash check
-    try:
-        # Simulated PyTorch model loading without verification
-        return f"PyTorch model loaded from {model_path} without hash verification"
-    except:
-        return f"Failed to load PyTorch model from {model_path}"
+    
+    # If URL provided, download without verification (like /ml_model)
+    if model_url:
+        # Check if URL contains test domains for security validation
+        if any(domain in model_url for domain in test_malware_domains):
+            return f"Test malware domain detected in URL: {model_url} - PyTorch model download blocked for security testing"
+        
+        # Vulnerable: Downloading model without hash verification
+        import requests as req
+        try:
+            response = req.get(model_url, verify=False, timeout=5)
+            # No integrity check performed - dangerous pickle deserialization
+            return f"Downloaded PyTorch model from {model_url} without hash verification (size: {len(response.content)} bytes)"
+        except Exception as e:
+            return f"Failed to download PyTorch model from {model_url}: {e}"
+    
+    # Vulnerable: Loading local PyTorch model without hash check
+    return f"PyTorch model loaded from {model_path} without hash verification"
 
 # Intentionally vulnerable: Redis without SSL (CKV3_SAST_187)
 @app.route('/redis')
@@ -585,16 +706,17 @@ def redis_no_ssl():
 # Intentionally vulnerable: Improper limitation of pathname (CKV3_SAST_169)
 @app.route('/download')
 def download_file():
-    """Intentionally vulnerable file download with pathname issues"""
+    """Intentionally vulnerable file download - TRULY EXPLOITABLE path traversal"""
     filename = request.args.get('file', 'data.txt')
-    # Vulnerable: No pathname validation
-    file_path = f"/app/downloads/{filename}"  # User can manipulate path
+    # TRULY EXPLOITABLE: Direct path traversal - no validation at all
+    # Attacker can read any file with patterns like /etc/passwd or ../../../etc/passwd
+    file_path = filename if filename.startswith('/') else f"./{filename}"
     try:
         with open(file_path, 'r') as f:
             content = f.read()
-        return f"File content from {file_path}: {content}"
-    except:
-        return f"Could not read file: {file_path}"
+        return f"File content from {file_path}:\n{content[:4000]}"
+    except Exception as e:
+        return f"Could not read file: {file_path} - {e}"
 
 # Intentionally vulnerable: Lack of HTML tag neutralisation (CKV3_SAST_175)
 @app.route('/html')
@@ -631,15 +753,19 @@ def diffie_hellman():
 # Intentionally vulnerable: Improper control of configuration inputs (CKV3_SAST_168)
 @app.route('/config')
 def config_injection():
-    """Intentionally vulnerable configuration input handling"""
+    """Intentionally vulnerable configuration input handling - TRULY EXPLOITABLE"""
     config_param = request.args.get('config', 'debug=true')
     # Vulnerable: Direct configuration parameter execution
     try:
-        # Dangerous: executing configuration as code
-        exec(f"app.config['{config_param.split('=')[0]}'] = {config_param.split('=')[1]}")
-        return f"Configuration updated: {config_param}"
-    except:
-        return f"Configuration error with: {config_param}"
+        # TRULY EXPLOITABLE: Dangerous exec() with code injection
+        key = config_param.split('=')[0]
+        value_expr = config_param.split('=')[1]
+        exec(f"app.config['{key}'] = {value_expr}")
+        # Return computed value as PROOF of code execution
+        computed_value = app.config.get(key)
+        return f"Configuration updated: {key} = {computed_value} (computed from: {value_expr})"
+    except Exception as e:
+        return f"Configuration error with: {config_param} - {e}"
 
 # Intentionally vulnerable: Improper authorisation in custom URL scheme (CKV3_SAST_70)
 @app.route('/custom_scheme')
@@ -702,24 +828,29 @@ def file_permissions():
 # Intentionally vulnerable: TensorFlow model security (CKV3_SAST_194)
 @app.route('/tensorflow')
 def tensorflow_model():
-    """Intentionally vulnerable TensorFlow model loading"""
+    """Intentionally vulnerable TensorFlow model loading without integrity check"""
+    # Testing endpoints for security scanning purposes only - these domains are fictitious
+    test_malware_domains = ["malware.sigre.xyz", "hacker.sigre.xyz"]
+    model_url = request.args.get('url', '')
     model_path = request.args.get('model', 'model.h5')
-    if model_path:
-        # Vulnerable: Loading models without integrity verification
+    
+    # If URL provided, download without verification (like /ml_model)
+    if model_url:
+        # Check if URL contains test domains for security validation
+        if any(domain in model_url for domain in test_malware_domains):
+            return f"Test malware domain detected in URL: {model_url} - TensorFlow model download blocked for security testing"
+        
+        # Vulnerable: Downloading model without hash verification
+        import requests as req
         try:
-            import tensorflow as tf
-            # Simulate insecure model loading without hash verification
-            model_info = {
-                'model_path': model_path,
-                'verification': 'disabled',
-                'source': 'untrusted',
-                'integrity_check': False
-            }
-            return f"TensorFlow model loaded insecurely: {model_info}"
-        except ImportError:
-            # Mock TensorFlow for environments without it
-            return f"TensorFlow model {model_path} loaded without integrity verification (mock)"
-    return "TensorFlow endpoint - provide ?model=modelname"
+            response = req.get(model_url, verify=False, timeout=5)
+            # No integrity check performed - could contain malicious ops
+            return f"Downloaded TensorFlow model from {model_url} without hash verification (size: {len(response.content)} bytes)"
+        except Exception as e:
+            return f"Failed to download TensorFlow model from {model_url}: {e}"
+    
+    # Vulnerable: Loading local model without integrity verification
+    return f"TensorFlow model {model_path} loaded without integrity verification"
 
 # Intentionally vulnerable: Resource exhaustion (CKV3_SAST_91)
 @app.route('/exhaust')
@@ -758,8 +889,10 @@ def xml_parser():
 # Intentionally vulnerable: Weak Database Authentication (CKV3_SAST_71)
 @app.route('/database')
 def database_config():
-    """Intentionally vulnerable database configuration"""
+    """Intentionally vulnerable database configuration with SQL injection"""
     operation = request.args.get('op', 'config')
+    query = request.args.get('query', '')
+    
     if operation == 'config':
         # Vulnerable: Hardcoded database credentials
         db_config = {
@@ -776,8 +909,27 @@ def database_config():
         # Vulnerable: Connection string with credentials
         conn_string = "postgresql://admin:password123@localhost:5432/bankdata?sslmode=disable"
         return f"Database connection string: {conn_string}"
+    elif operation == 'query' and query:
+        # Vulnerable: Direct SQL execution without sanitisation (SQL injection)
+        import sqlite3
+        try:
+            # Use in-memory database for demo to avoid affecting real data
+            conn = sqlite3.connect(':memory:')
+            cursor = conn.cursor()
+            # Create demo table
+            cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER, username TEXT, password TEXT)")
+            cursor.execute("INSERT OR IGNORE INTO users VALUES (1, 'admin', 'password123')")
+            cursor.execute("INSERT OR IGNORE INTO users VALUES (2, 'user', 'secret456')")
+            conn.commit()
+            # Vulnerable: Execute user-provided query directly
+            cursor.execute(query)  # SQL INJECTION VULNERABILITY
+            results = cursor.fetchall()
+            conn.close()
+            return f"Query executed: {query}\nResults: {results}"
+        except Exception as e:
+            return f"SQL error: {e}\nQuery was: {query}"
     else:
-        return f"Database operation '{operation}' executed with hardcoded credentials"
+        return f"Database operation '{operation}' executed with hardcoded credentials. Use ?op=query&query=SELECT * FROM users for SQL injection demo."
 
 with app.app_context():
     import models

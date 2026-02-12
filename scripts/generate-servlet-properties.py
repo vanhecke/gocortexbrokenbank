@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """
 Generate Java .properties file from localise.yaml for Tomcat servlet localisation.
 This script is run during Maven build to enable regional support for Tomcat servlets.
@@ -85,6 +87,9 @@ def generate_properties(yaml_path, output_path, app_version):
         # Write .properties file
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write("# Tomcat Servlet Localisation Properties\n")
+            f.write("# SPDX-FileCopyrightText: GoCortexIO\n")
+            f.write("# SPDX-License-Identifier: AGPL-3.0-or-later\n")
+            f.write("#\n")
             f.write("# Auto-generated from localise.yaml - DO NOT EDIT MANUALLY\n")
             f.write(f"# Application Version: {app_version}\n\n")
             

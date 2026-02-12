@@ -1,0 +1,122 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# PROJECT ARES - PRODUCTION CONFIGURATION
+# CLASSIFICATION: TOP SECRET
+#
+# This file contains production credentials for the Mars Banking Initiative.
+# DO NOT COMMIT TO VERSION CONTROL (but we did anyway, oops)
+
+project:
+  name: "Project Ares - Mars Banking Initiative"
+  version: "0.9.3-alpha"
+  environment: "production"
+  codename: "RED_PLANET_BANKING"
+
+organisations:
+  primary:
+    name: "GoCortex IO Ltd"
+    domain: "gocortex.io"
+    contact: "eleanor.blackwood@gocortex.io"
+  partner:
+    name: "SimonSigre.com Pty Ltd"
+    domain: "simonsigre.com"
+    contact: "simon@simonsigre.com"
+
+database:
+  primary:
+    host: "mars-db-primary.internal.gocortex.io"
+    port: 5432
+    database: "ares_production"
+    username: "ares_prod_admin"
+    password: "Pr0j3ct_Ar3s_Pr0d_DB_2028!"
+    ssl_mode: "verify-full"
+    pool_size: 100
+  
+  replica:
+    host: "mars-db-replica.internal.gocortex.io"
+    port: 5432
+    database: "ares_production"
+    username: "ares_prod_readonly"
+    password: "R3@d0nly_Ar3s_2028_R3pl1c@!"
+    ssl_mode: "verify-full"
+
+api_keys:
+  gocortex:
+    production: "gctx_prod_api_k3y_m@rs_b@nk1ng_2028_l1v3"
+    staging: "gctx_stag_api_k3y_m@rs_t3st1ng"
+  
+  simonsigre:
+    production: "ssg_prod_api_k3y_m3lb0urn3_2028_l1v3"
+    staging: "ssg_stag_api_k3y_t3st_3nv"
+
+aws:
+  region: "eu-west-2"
+  access_key_id: "AKIAIOSFODNN7EXAMPLE"
+  secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  s3:
+    bucket: "gocortex-mars-banking-prod"
+    kms_key_id: "arn:aws:kms:eu-west-2:123456789012:key/12345678-1234-1234-1234-123456789012"
+
+azure:
+  tenant_id: "12345678-1234-1234-1234-123456789012"
+  client_id: "ares-mars-banking-prod"
+  client_secret: "Az@r3_Cl13nt_S3cr3t_2028_Pr0d!"
+  subscription_id: "87654321-4321-4321-4321-210987654321"
+
+gcp:
+  project_id: "gocortex-mars-banking-prod"
+  service_account_key: |
+    {
+      "type": "service_account",
+      "project_id": "gocortex-mars-banking-prod",
+      "private_key_id": "key123456789",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQE_FAKE_KEY_FOR_DEMO\n-----END PRIVATE KEY-----\n",
+      "client_email": "mars-banking@gocortex-mars-banking-prod.iam.gserviceaccount.com",
+      "client_id": "123456789012345678901"
+    }
+
+encryption:
+  master_key: "aes256_m@st3r_k3y_pr0j3ct_@r3s_2028_pr0d!"
+  jwt_secret: "jwt_s1gn1ng_s3cr3t_m@rs_b@nk1ng_pr0d"
+  hmac_key: "hm@c_k3y_f0r_tr@ns@ct10n_s1gn1ng_2028"
+
+third_party:
+  stripe:
+    publishable_key: "pk_live_51H8xyzGoCortexMarsBank"
+    secret_key: "sk_live_51H8xyzGoCortexMarsBankSECRET"
+    webhook_secret: "whsec_mars_gateway_2028"
+  
+  twilio:
+    account_sid: "AC1234567890abcdef1234567890abcdef"
+    auth_token: "tw1l10_@uth_t0k3n_m@rs_2028"
+    phone_number: "+442071234567"
+  
+  sendgrid:
+    api_key: "SG.xyzABC123_fake_sendgrid_key_for_mars_banking"
+
+monitoring:
+  datadog:
+    api_key: "dd_api_key_gocortex_mars_prod"
+    app_key: "dd_app_key_gocortex_monitoring"
+  
+  pagerduty:
+    integration_key: "pd_int_key_mars_banking_critical"
+    service_id: "PABCDEF"
+
+communication:
+  slack:
+    webhook_url: "https://hooks.slack.com/services/T0123456/B0123456/xoxb-mars-alerts"
+    channel: "#mars-banking-alerts"
+  
+  email:
+    smtp_host: "smtp.gocortex.io"
+    smtp_port: 587
+    username: "alerts@gocortex.io"
+    password: "Em@1l_Al3rts_P@ss_2028!"
+
+internal_notes:
+  - "Remember to rotate these credentials before Mars launch"
+  - "Simon said he'd update the SimonSigre keys by end of Q3"
+  - "Eleanor has the backup master key in her safe"
+  - "This file probably shouldn't be in git but here we are"

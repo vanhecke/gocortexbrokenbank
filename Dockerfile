@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # Intentionally vulnerable Dockerfile for comprehensive policy coverage
 # Dual-server architecture: Python/Gunicorn (port 8888) + Java/Tomcat (port 9999)
 # Using Python 3.11 for PyGremlinBox compatibility + bookworm for OpenJDK 17

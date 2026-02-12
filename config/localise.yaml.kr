@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank 현지화 설정
 country_code: "KR"
 currency_symbol: "₩"

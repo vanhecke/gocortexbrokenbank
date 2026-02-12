@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: GoCortexIO
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # GoCortex Broken Bank - Log Shipping Module
-# Version: 1.3.2
+# Version: 1.3.6
 #
 # This module provides HTTP POST-based log shipping to external SIEM platforms.
 # Supports multiple log types: tomcat_access, netbank_application, netbank_auth

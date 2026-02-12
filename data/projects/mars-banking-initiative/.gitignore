@@ -1,0 +1,40 @@
+# Project Ares - Mars Banking Initiative
+# Files that SHOULD be ignored (but we forgot to add them before committing)
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Logs
+logs/
+*.log
+
+# Local development
+.env.local
+
+# NOTE: The following should have been added BEFORE committing secrets
+# But someone forgot, so now they're in git history forever:
+#
+# config/.env.production
+# config/credentials.json
+# config/production.yaml
+# .ssh/
+#
+# Oops.
