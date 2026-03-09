@@ -595,3 +595,138 @@ tomcat_servlets:
     jdk_version_label: "JDK 버전:"
     jdk_requirement: "17 (Spring4Shell 익스플로잇에 필요)"
     return_link: "Flask 애플리케이션으로 돌아가기"
+
+# SpaceATM 터미널 현지화 (React/Next.js ATM 시뮬레이터 - 포트 7777)
+spaceatm:
+  terminal:
+    title: "SpaceATM 터미널"
+    subtitle: "화성 뱅킹 이니셔티브"
+    boot_message: "SpaceATM 터미널 v1.4.0 - 초기화 중..."
+    ready_message: "터미널 준비 완료"
+    manufacturer: "GoCortex IO Co., Ltd."
+    manufacturer_location: "서울특별시 강남구 테헤란로 427"
+    testing_facility: "판교 테스트 시설"
+    serial_prefix: "SEL-SA"
+    serial_number: "SEL-SA-003847"
+    model: "SA-7000 시리즈"
+    firmware: "FW-2025.03.1"
+    version_label: "Broken Bank v1.4.0"
+    cve_surface: "CVE-2025-55182"
+  
+  currency:
+    symbol: "₩"
+    code: "KRW"
+    name: "대한민국 원"
+    note_denominations:
+      - 1000
+      - 5000
+      - 10000
+      - 50000
+  
+  pins:
+    maintenance_pin: "7777"
+    demo_pins:
+      - pin: "1234"
+        holder: "김민수"
+        account: "0012-3456"
+        balance: "2847500"
+      - pin: "0000"
+        holder: "이서연"
+        account: "0098-7654"
+        balance: "156230000"
+      - pin: "1111"
+        holder: "박지호"
+        account: "0045-6789"
+        balance: "489150"
+  
+  screens:
+    pin_entry:
+      prompt: "비밀번호를 입력하세요"
+      error_invalid: "잘못된 비밀번호입니다. 다시 시도해 주세요."
+      error_locked: "카드가 회수되었습니다. 가까운 지점에 문의하세요."
+      attempts_remaining: "남은 시도 횟수:"
+    main_menu:
+      title: "메인 메뉴"
+      balance_enquiry: "잔액 조회"
+      withdrawal: "출금"
+      deposit: "입금"
+      transaction_history: "거래 내역"
+      exit: "카드 꺼내기"
+    balance:
+      title: "잔액 조회"
+      available_balance: "출금 가능 잔액"
+      account_number: "계좌"
+      back: "메뉴로 돌아가기"
+    withdrawal:
+      title: "현금 출금"
+      select_amount: "금액을 선택하거나 직접 입력하세요"
+      quick_amounts:
+        - 10000
+        - 50000
+        - 100000
+        - 500000
+        - 1000000
+      custom_amount: "직접 입력"
+      insufficient_funds: "잔액이 부족합니다"
+      dispensing: "현금을 출금하고 있습니다..."
+      collect_cash: "현금을 수령해 주세요"
+      success: "거래가 완료되었습니다"
+      back: "메뉴로 돌아가기"
+    deposit:
+      title: "현금 입금"
+      enter_amount: "입금 금액을 입력하세요"
+      confirm: "입금 확인"
+      processing: "입금 처리 중..."
+      success: "입금이 완료되었습니다"
+      back: "메뉴로 돌아가기"
+    transaction_history:
+      title: "최근 거래 내역"
+      no_transactions: "최근 거래 내역이 없습니다"
+      back: "메뉴로 돌아가기"
+  
+  service_menu:
+    title: "서비스 메뉴"
+    subtitle: "인가된 직원 전용"
+    access_granted: "유지보수 접근이 허용되었습니다"
+    options:
+      diagnostics: "하드웨어 진단"
+      cassette_status: "현금 카세트 상태"
+      dispense_test: "출금 테스트"
+      network_test: "네트워크 진단"
+      exit_service: "서비스 모드 종료"
+    diagnostics:
+      title: "하드웨어 진단"
+      card_reader: "카드 리더기"
+      cash_dispenser: "현금 출금기"
+      receipt_printer: "영수증 프린터"
+      network_adapter: "네트워크 어댑터"
+      encryption_module: "암호화 모듈"
+      status_ok: "정상 작동"
+      status_warning: "경고"
+      status_error: "오류"
+    cassette:
+      title: "현금 카세트 상태"
+      cassette_a: "카세트 A (₩50,000권)"
+      cassette_b: "카세트 B (₩10,000권)"
+      cassette_c: "카세트 C (₩5,000권)"
+      cassette_d: "카세트 D (₩1,000권)"
+      notes_remaining: "잔여 매수"
+      capacity: "수용량"
+  
+  jackpot:
+    trigger_message: "출금 테스트 시작"
+    override_warning: "하드웨어 오버라이드 활성화"
+    dispensing_label: "출금 중"
+    total_dispensed: "총 출금액"
+    notes_ejected: "배출된 지폐 수"
+    cassette_override: "모든 카세트 잠금 해제"
+    completion_message: "출금 테스트 완료"
+    motor_status: "출금 모터: 연속 공급"
+    security_bypass: "보안 인터록: 우회됨"
+    audit_warning: "감사 로그: 일시 중단"
+  
+  footer:
+    copyright: "GoCortex IO Co., Ltd."
+    location: "서울특별시 강남구 테헤란로 427"
+    support: "서비스: 1588-7777"
+    warning: "인가된 사용자만 이용 가능합니다. 모든 거래가 모니터링됩니다."

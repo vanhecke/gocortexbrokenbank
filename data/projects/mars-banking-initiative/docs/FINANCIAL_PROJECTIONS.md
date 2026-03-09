@@ -8,8 +8,8 @@
 ### Executive Financial Summary
 
 This document contains the confidential financial projections for the
-Mars Banking Initiative joint venture between GoCortex IO Ltd (London)
-and SimonSigre.com Pty Ltd (Melbourne).
+Mars Banking Initiative joint venture between GoCortex IO Pty Ltd (Adelaide)
+and SimonSigre.com Pty Ltd (Adelaide).
 
 ---
 
@@ -17,10 +17,10 @@ and SimonSigre.com Pty Ltd (Melbourne).
 
 | Phase | Investment Required | Timeline |
 |-------|-------------------|----------|
-| Phase 1: R&D | GBP 47,000,000 | 2024-2025 |
-| Phase 2: Prototype | GBP 125,000,000 | 2025-2026 |
-| Phase 3: Mars Deployment | GBP 890,000,000 | 2027-2028 |
-| **Total** | **GBP 1,062,000,000** | |
+| Phase 1: R&D | AUD 89,000,000 | 2024-2025 |
+| Phase 2: Prototype | AUD 237,000,000 | 2025-2026 |
+| Phase 3: Mars Deployment | AUD 1,691,000,000 | 2027-2028 |
+| **Total** | **AUD 2,017,000,000** | |
 
 ---
 
@@ -28,18 +28,18 @@ and SimonSigre.com Pty Ltd (Melbourne).
 
 ### Conservative Scenario
 
-| Year | Transaction Volume | Revenue (GBP) | Profit Margin |
+| Year | Transaction Volume | Revenue (AUD) | Profit Margin |
 |------|-------------------|---------------|---------------|
-| 2029 | 50,000/month | 2,400,000 | 15% |
-| 2030 | 200,000/month | 9,600,000 | 25% |
-| 2031 | 1,000,000/month | 48,000,000 | 35% |
-| 2032 | 5,000,000/month | 240,000,000 | 45% |
-| 2033 | 20,000,000/month | 960,000,000 | 55% |
-| 2034 | 75,000,000/month | 3,600,000,000 | 60% |
-| 2035 | 200,000,000/month | 9,600,000,000 | 65% |
-| 2036 | 500,000,000/month | 24,000,000,000 | 70% |
-| 2037 | 1,000,000,000/month | 48,000,000,000 | 72% |
-| 2038 | 2,000,000,000/month | 96,000,000,000 | 75% |
+| 2029 | 50,000/month | 4,560,000 | 15% |
+| 2030 | 200,000/month | 18,240,000 | 25% |
+| 2031 | 1,000,000/month | 91,200,000 | 35% |
+| 2032 | 5,000,000/month | 456,000,000 | 45% |
+| 2033 | 20,000,000/month | 1,824,000,000 | 55% |
+| 2034 | 75,000,000/month | 6,840,000,000 | 60% |
+| 2035 | 200,000,000/month | 18,240,000,000 | 65% |
+| 2036 | 500,000,000/month | 45,600,000,000 | 70% |
+| 2037 | 1,000,000,000/month | 91,200,000,000 | 72% |
+| 2038 | 2,000,000,000/month | 182,400,000,000 | 75% |
 
 ### Optimistic Scenario (Monopoly Maintained)
 
@@ -62,7 +62,7 @@ regulatory capture (see legal strategy document), revenues could be
 
 | Entity | Equity Share | Voting Rights |
 |--------|-------------|---------------|
-| GoCortex IO Ltd | 55% | 55% |
+| GoCortex IO Pty Ltd | 55% | 55% |
 | SimonSigre.com Pty Ltd | 35% | 35% |
 | Founding Team Pool | 10% | 0% |
 
@@ -74,16 +74,16 @@ regulatory capture (see legal strategy document), revenues could be
 
 | Name | Role | Base Salary | Equity |
 |------|------|-------------|--------|
-| Simon Sigre | CVO | GBP 850,000 | 8% |
-| Dr. Eleanor Blackwood | CTO | GBP 720,000 | 5% |
-| Marcus Chen | Lead Engineer | GBP 380,000 | 2% |
-| Priya Sharma | Compliance | GBP 290,000 | 1% |
+| Simon Sigre | CVO | AUD 1,615,000 | 8% |
+| Dr. Eleanor Blackwood | CTO | AUD 1,368,000 | 5% |
+| Marcus Chen | Lead Engineer | AUD 722,000 | 2% |
+| Priya Sharma | Compliance | AUD 551,000 | 1% |
 
 ---
 
 ## Exit Strategy Options
 
-1. **IPO (2032)**: Target valuation GBP 50-100 billion
+1. **IPO (2032)**: Target valuation AUD 95-190 billion
 2. **Strategic Acquisition**: Potential acquirers include SpaceX, Blue Origin, major banks
 3. **Hold Forever**: Monopoly on Martian banking = infinite money printer
 

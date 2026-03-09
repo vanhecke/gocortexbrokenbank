@@ -3,7 +3,7 @@
 #
 # PROJECT ARES - CLASSIFIED
 # Mars Gateway Relay System
-# Patent Pending: GB2024/MARS-GW-001
+# Patent Pending: AU2024/MARS-GW-001
 
 """
 Mars Gateway - Interplanetary Transaction Relay
@@ -12,7 +12,7 @@ This module implements the delay-tolerant networking layer for
 banking transactions between Earth and Mars. Uses a modified
 Bundle Protocol for store-and-forward operation.
 
-COMMERCIAL VALUE: Estimated GBP 2.1 billion in licensing alone.
+COMMERCIAL VALUE: Estimated AUD 4 billion in licensing alone.
 """
 
 import base64

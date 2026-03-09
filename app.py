@@ -49,7 +49,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Suppress Flask-SQLAlchem
 db.init_app(app)
 
 # Application version
-APP_VERSION = "1.3.6"
+APP_VERSION = "1.4.0"
 
 # Testing URLs for cybersecurity validation purposes only - these are fictitious endpoints
 # used by automated security scanners to validate URL filtering and threat detection capabilities
@@ -86,11 +86,11 @@ def load_localisation():
 
 localisation = load_localisation()
 
-# Setup Mars Banking Initiative repository for BB-REQ-012 (Exposed Git Repository)
+# Setup Mars Banking Initiative repository (Exposed Git Repository)
 def setup_mars_repo():
     """
     Create the Mars Banking Initiative git repository for security testing.
-    Implements BB-REQ-012: Exposed Local Git Repository capability.
+    Implements the Exposed Local Git Repository capability.
     Creates realistic commit history simulating development progression.
     """
     import subprocess

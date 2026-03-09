@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: GoCortexIO
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# GoCortex Broken Bank - Dual-Server Architecture
+# GoCortex Broken Bank - Tri-Server Architecture
 # Flask/Gunicorn (port 8888) for SAST testing + Tomcat (port 9999) for exploit endpoints
 services:
   gocortex-broken-bank:
@@ -9,6 +9,7 @@ services:
     ports:
       - "8888:8888"   # Flask/Gunicorn - Banking UI and SAST endpoints
       - "9999:8080"   # Tomcat - Java exploit endpoints and Spring4Shell
+      - "7777:7777"    # React/Next.js - SpaceATM Terminal and CVE-2025-55182
     environment:
       - SESSION_SECRET=hardcoded-docker-secret-key
       - DATABASE_URL=sqlite:///app/instance/gocortexbrokenbank.db

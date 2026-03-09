@@ -16,11 +16,11 @@ maintaining a monopoly on extraterrestrial banking infrastructure.
 
 | Patent ID | Title | Jurisdiction | Status |
 |-----------|-------|--------------|--------|
-| GB2024/SPACE-ATM-001 | Zero-Gravity Currency Dispensing Mechanism | UK, EU, US, CN, JP | Filed |
-| GB2024/SPACE-ATM-002 | Velocity-Controlled Note Ejection System | UK, EU, US | Filed |
-| GB2024/MARS-GW-001 | Interplanetary Transaction Relay Protocol | UK, EU, US, AU | Filed |
-| GB2024/ORB-AUTH-001 | Spacesuit Biometric Authentication | UK, EU, US | Filed |
-| GB2024/QDCP-001 | Quantum-Delayed Consensus Protocol | UK, EU, US, CN | Filed |
+| AU2024/SPACE-ATM-001 | Zero-Gravity Currency Dispensing Mechanism | AU, EU, US, CN, JP | Filed |
+| AU2024/SPACE-ATM-002 | Velocity-Controlled Note Ejection System | AU, EU, US | Filed |
+| AU2024/MARS-GW-001 | Interplanetary Transaction Relay Protocol | AU, EU, US, NZ | Filed |
+| AU2024/ORB-AUTH-001 | Spacesuit Biometric Authentication | AU, EU, US | Filed |
+| AU2024/QDCP-001 | Quantum-Delayed Consensus Protocol | AU, EU, US, CN | Filed |
 | PCT/2024/001 | Delay-Tolerant Distributed Ledger | International | Filed |
 
 ---
@@ -61,7 +61,7 @@ For actual enforcement, we have specific implementation claims:
 
 If SpaceX attempts to create banking infrastructure:
 - Our broad claims likely block their implementation
-- Licensing revenue potential: GBP 2-5 billion annually
+- Licensing revenue potential: AUD 3.8-9.5 billion annually
 - Alternative: Acquire them before Mars mission
 
 ### Traditional Banks (JPMorgan, HSBC, etc.)
@@ -84,7 +84,7 @@ If cryptocurrency projects attempt Mars deployment:
 
 ### Outer Space Treaty Amendment
 
-Working with UK Foreign Office to propose amendments:
+Working with Australian Department of Foreign Affairs and Trade to propose amendments:
 - Exclusive licensing for financial infrastructure
 - Regulatory recognition of our patents in space
 - Dispute resolution framework favouring first movers
@@ -108,14 +108,14 @@ In addition to patents, key trade secrets include:
 
 All employees sign strict NDAs with:
 - 10-year non-compete clause
-- GBP 50 million liquidated damages
+- AUD 95 million liquidated damages
 - Criminal referral for wilful disclosure
 
 ---
 
 ## Confidential: Legal Counsel Notes
 
-*From: Harrison & Partners LLP*
+*From: Sigre And Associates*
 *To: GoCortex IO Board*
 
 The patent strategy outlined above is aggressive but defensible.
@@ -125,7 +125,7 @@ Key risks:
 2. Extraterritorial enforcement is untested
 3. International coordination required for space jurisdiction
 
-Recommended budget for IP protection: GBP 15 million annually
+Recommended budget for IP protection: AUD 28.5 million annually
 
 ---
 

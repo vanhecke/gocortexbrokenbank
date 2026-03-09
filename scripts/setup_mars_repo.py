@@ -4,8 +4,8 @@
 #
 # Mars Banking Initiative Repository Setup Script
 #
-# This script creates a realistic git repository for BB-REQ-012
-# (Exposed Local Git Repository) demonstration.
+# This script creates a realistic git repository for the
+# Exposed Local Git Repository demonstration.
 
 """
 Setup script for creating the Mars Banking Initiative git repository.

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # Intentionally vulnerable Dockerfile for comprehensive policy coverage
-# Dual-server architecture: Python/Gunicorn (port 8888) + Java/Tomcat (port 9999)
+# Tri-server architecture: Python/Gunicorn (port 8888) + Java/Tomcat (port 9999) + React/Next.js (port 7777)
 # Using Python 3.11 for PyGremlinBox compatibility + bookworm for OpenJDK 17
 FROM python:3.11-bookworm
 
@@ -31,6 +31,11 @@ RUN apt-get update && \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Node.js 20 LTS for SpaceATM Terminal (React/Next.js)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
 # Setting weak file permissions
 RUN chmod 777 /tmp
 RUN chmod 755 /etc/passwd
@@ -55,7 +60,7 @@ RUN chmod 644 /opt/tomcat/conf/tomcat-users.xml && \
     chmod 644 /opt/tomcat/webapps/host-manager/META-INF/context.xml
 
 # Exposing application ports (8888 for Flask/Gunicorn, 8080 for Tomcat - mapped to 9999 externally)
-EXPOSE 8888 8080
+EXPOSE 8888 8080 7777
 
 # Adding secrets directly in Dockerfile (bad practice)
 ENV SECRET_KEY="hardcoded-secret-12345"
@@ -76,6 +81,13 @@ WORKDIR /app
 
 # Copying application code first
 COPY . .
+
+# Build SpaceATM Terminal (React/Next.js on port 7777)
+WORKDIR /app/react-app
+RUN npm install && \
+    node scripts/patch-react-server-dom.js && \
+    node scripts/patch-csrf-origin-check.js && \
+    npm run build
 
 # Installing Python packages with vulnerable/older versions for security testing
 RUN pip install --no-cache-dir \
@@ -210,4 +222,4 @@ CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Health check with potential information disclosure (checks both servers)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:8888/ && curl -f http://localhost:8080/ || exit 1
+  CMD curl -f http://localhost:8888/ && curl -f http://localhost:8080/ && curl -f http://localhost:7777/ || exit 1

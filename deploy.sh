@@ -56,12 +56,21 @@ else
     echo "WARNING: Tomcat server failed to start on port 9999"
 fi
 
-if [ $FLASK_STATUS -eq 1 ] && [ $TOMCAT_STATUS -eq 1 ]; then
+REACT_STATUS=0
+
+if curl -f http://localhost:7777 >/dev/null 2>&1; then
+    REACT_STATUS=1
+    echo "React/Next.js server running successfully on port 7777"
+else
+    echo "WARNING: React/Next.js server failed to start on port 7777"
+fi
+
+if [ $FLASK_STATUS -eq 1 ] && [ $TOMCAT_STATUS -eq 1 ] && [ $REACT_STATUS -eq 1 ]; then
     echo ""
-    echo "GoCortex Broken Bank dual-server deployment successful!"
+    echo "GoCortex Broken Bank tri-server deployment successful!"
     echo "Container Status:"
     docker ps --filter "name=gocortex-broken-bank"
-elif [ $FLASK_STATUS -eq 1 ] || [ $TOMCAT_STATUS -eq 1 ]; then
+elif [ $FLASK_STATUS -eq 1 ] || [ $TOMCAT_STATUS -eq 1 ] || [ $REACT_STATUS -eq 1 ]; then
     echo ""
     echo "Partial deployment - one server failed. Checking logs..."
     docker-compose logs || docker compose logs
@@ -82,6 +91,7 @@ echo ""
 echo "Access URLs:"
 echo "  Flask/Gunicorn (SAST Testing): http://localhost:8888"
 echo "  Tomcat/Java (Exploit Endpoints): http://localhost:9999/exploit-app/"
+echo "  SpaceATM Terminal (React/Next.js): http://localhost:7777"
 echo "  Security Disclaimer: http://localhost:8888/disclaimer"
 echo ""
 echo "Container Management:"
@@ -90,9 +100,10 @@ echo "  Logs: docker-compose logs -f"
 echo "  Shell: docker exec -it gocortex-broken-bank bash"
 echo ""
 echo "Security Testing Features:"
-echo "  • 43+ vulnerable endpoints across dual-server architecture"
+echo "  • 55+ vulnerable endpoints across tri-server architecture"
 echo "  • 75+ hardcoded secrets for detection testing"
 echo "  • Flask server (port 8888): SAST vulnerabilities, secrets, license compliance"
 echo "  • Tomcat server (port 9999): RCE exploits, Spring4Shell CVE-2022-22965"
+echo "  • React/Next.js server (port 7777): CVE-2025-55182 React2Shell RCE, CVE-2025-66478"
 echo "  • Insecure Docker configuration for container scanning"
 echo "  • Comprehensive OWASP Top 10 vulnerability coverage"

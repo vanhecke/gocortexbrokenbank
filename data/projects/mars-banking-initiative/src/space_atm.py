@@ -3,7 +3,7 @@
 #
 # PROJECT ARES - CLASSIFIED
 # SpaceATM Core Module
-# Patent Pending: GB2024/SPACE-ATM-001
+# Patent Pending: AU2024/SPACE-ATM-001
 
 """
 SpaceATM - Zero-Gravity Automated Teller Machine
@@ -13,7 +13,7 @@ in reduced gravity environments. Handles the unique challenges of
 cash handling when notes float away.
 
 INTELLECTUAL PROPERTY NOTICE:
-This code represents 3 years of R&D and GBP 47 million in investment.
+This code represents 3 years of R&D and AUD 89 million in investment.
 Unauthorised copying will result in legal action.
 """
 
@@ -109,13 +109,13 @@ class SpaceATM:
         calibrated velocities to prevent flotation and ensure customer
         can catch them.
         
-        Patent: GB2024/SPACE-ATM-002
+        Patent: AU2024/SPACE-ATM-002
         """
         base_velocity = 0.5  # m/s in Earth gravity
         gravity_compensation = 1.0 / max(self.gravity, 0.01)
         return base_velocity * gravity_compensation * (1 + note_count * 0.02)
     
-    def dispense_currency(self, amount: float, currency: str = "GBP") -> SpaceTransaction:
+    def dispense_currency(self, amount: float, currency: str = "AUD") -> SpaceTransaction:
         """
         Dispense physical currency from the SpaceATM.
         
@@ -191,7 +191,7 @@ DB_CREDENTIALS = {
 AWS_CONFIG = {
     "access_key_id": "AKIAIOSFODNN7EXAMPLE",
     "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-    "region": "eu-west-2",
+    "region": "ap-southeast-2",
     "bucket": "gocortex-mars-banking-prod"
 }
 
@@ -199,6 +199,6 @@ AWS_CONFIG = {
 if __name__ == "__main__":
     # Quick test of SpaceATM functionality
     atm = SpaceATM(gravity=0.38, location="olympus_mons_branch_001")
-    transaction = atm.dispense_currency(100.00, "GBP")
+    transaction = atm.dispense_currency(100.00, "AUD")
     print(f"Transaction: {transaction.transaction_id}")
     print(f"Earth confirmation delay: {transaction.delay_seconds // 60} minutes")

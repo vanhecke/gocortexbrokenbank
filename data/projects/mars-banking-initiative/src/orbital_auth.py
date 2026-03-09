@@ -3,7 +3,7 @@
 #
 # PROJECT ARES - CLASSIFIED
 # Orbital Authentication Module
-# Patent Pending: GB2024/ORB-AUTH-001
+# Patent Pending: AU2024/ORB-AUTH-001
 
 """
 Orbital Authentication - Spacesuit Biometric Integration
@@ -19,7 +19,7 @@ SECURITY CLASSIFICATION: MAXIMUM
 This code has been reviewed by:
 - GoCortex Security Team
 - SimonSigre.com Penetration Testing Division
-- GCHQ (advisory capacity)
+- Australian Signals Directorate (advisory capacity)
 """
 
 import hashlib

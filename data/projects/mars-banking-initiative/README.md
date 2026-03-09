@@ -11,7 +11,7 @@
 **CLASSIFICATION: TOP SECRET - BOARD EYES ONLY**
 
 **Project Codename:** ARES  
-**Projected Revenue:** GBP 4.7 Trillion (conservative estimate)  
+**Projected Revenue:** AUD 8.9 Trillion (conservative estimate)  
 **Target Launch:** Q4 2028 (Mars Opposition Window)  
 
 ---
@@ -20,7 +20,7 @@
 
 This repository contains the proprietary source code and intellectual property
 for the first interplanetary banking infrastructure. The collaboration between
-GoCortex IO (London) and SimonSigre.com (Melbourne) represents the most
+GoCortex IO Pty Ltd (Adelaide) and SimonSigre.com Pty Ltd (Adelaide) represents the most
 ambitious financial technology project in human history.
 
 Our SpaceATM system will enable colonists on Mars to conduct banking operations
@@ -76,12 +76,12 @@ python src/space_atm.py --simulate --gravity=0.38
 
 ## Revenue Projections
 
-| Year | Colonist Population | Transaction Volume | Revenue (GBP) |
+| Year | Colonist Population | Transaction Volume | Revenue (AUD) |
 |------|---------------------|-------------------|---------------|
-| 2029 | 100                 | 50,000/month      | 2.4M          |
-| 2032 | 10,000              | 5M/month          | 240M          |
-| 2040 | 1,000,000           | 500M/month        | 24B           |
-| 2050 | 50,000,000          | 25B/month         | 1.2T          |
+| 2029 | 100                 | 50,000/month      | 4.6M          |
+| 2032 | 10,000              | 5M/month          | 456M          |
+| 2040 | 1,000,000           | 500M/month        | 45.6B         |
+| 2050 | 50,000,000          | 25B/month         | 2.3T          |
 
 **Note:** These projections assume we maintain our monopoly on Martian banking
 infrastructure. Patents filed in 47 countries plus pending Outer Space Treaty
@@ -113,5 +113,5 @@ may result in prosecution under both terrestrial and (pending) Martian law.
 
 *"Banking Beyond Earth" - Project Ares Motto*
 
-Copyright 2024-2028 GoCortex IO Ltd & SimonSigre.com Pty Ltd
+Copyright 2024-2028 GoCortex IO Pty Ltd & SimonSigre.com Pty Ltd
 All Rights Reserved. Seriously. We mean it.

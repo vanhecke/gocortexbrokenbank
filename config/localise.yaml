@@ -595,3 +595,139 @@ tomcat_servlets:
     jdk_version_label: "JDK Version:"
     jdk_requirement: "17 (Required for Spring4Shell exploitation)"
     return_link: "Return to Flask Application"
+
+# SpaceATM Terminal Localisation (React/Next.js ATM Simulator - Port 7777)
+spaceatm:
+  terminal:
+    title: "SpaceATM Terminal"
+    subtitle: "Mars Banking Initiative"
+    boot_message: "SpaceATM Terminal v1.4.0 - Initialising..."
+    ready_message: "Terminal Ready"
+    manufacturer: "GoCortex IO Pty Ltd"
+    manufacturer_location: "Southbank VIC 3006"
+    testing_facility: "Yarra Valley Testing Facility"
+    serial_prefix: "VIC-SA"
+    serial_number: "VIC-SA-003847"
+    model: "SA-7000 Series"
+    firmware: "FW-2025.03.1"
+    version_label: "Broken Bank v1.4.0"
+    cve_surface: "CVE-2025-55182"
+  
+  currency:
+    symbol: "$"
+    code: "AUD"
+    name: "Australian Dollar"
+    note_denominations:
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+  
+  pins:
+    maintenance_pin: "7777"
+    demo_pins:
+      - pin: "1234"
+        holder: "J. Smith"
+        account: "0012-3456"
+        balance: "2847.50"
+      - pin: "0000"
+        holder: "S. Chen"
+        account: "0098-7654"
+        balance: "156230.00"
+      - pin: "1111"
+        holder: "M. Williams"
+        account: "0045-6789"
+        balance: "489.15"
+  
+  screens:
+    pin_entry:
+      prompt: "Enter your PIN"
+      error_invalid: "Invalid PIN. Please try again."
+      error_locked: "Card retained. Contact your branch."
+      attempts_remaining: "Attempts remaining:"
+    main_menu:
+      title: "Main Menu"
+      balance_enquiry: "Balance Enquiry"
+      withdrawal: "Withdrawal"
+      deposit: "Deposit"
+      transaction_history: "Transaction History"
+      exit: "Remove Card"
+    balance:
+      title: "Balance Enquiry"
+      available_balance: "Available Balance"
+      account_number: "Account"
+      back: "Back to Menu"
+    withdrawal:
+      title: "Cash Withdrawal"
+      select_amount: "Select amount or enter custom"
+      quick_amounts:
+        - 20
+        - 50
+        - 100
+        - 200
+        - 500
+      custom_amount: "Other Amount"
+      insufficient_funds: "Insufficient funds"
+      dispensing: "Dispensing cash..."
+      collect_cash: "Please collect your cash"
+      success: "Transaction complete"
+      back: "Back to Menu"
+    deposit:
+      title: "Cash Deposit"
+      enter_amount: "Enter deposit amount"
+      confirm: "Confirm Deposit"
+      processing: "Processing deposit..."
+      success: "Deposit successful"
+      back: "Back to Menu"
+    transaction_history:
+      title: "Recent Transactions"
+      no_transactions: "No recent transactions"
+      back: "Back to Menu"
+  
+  service_menu:
+    title: "SERVICE MENU"
+    subtitle: "Authorised Personnel Only"
+    access_granted: "Maintenance access granted"
+    options:
+      diagnostics: "Hardware Diagnostics"
+      cassette_status: "Cash Cassette Status"
+      dispense_test: "Dispense Test"
+      network_test: "Network Diagnostics"
+      exit_service: "Exit Service Mode"
+    diagnostics:
+      title: "HARDWARE DIAGNOSTICS"
+      card_reader: "Card Reader"
+      cash_dispenser: "Cash Dispenser"
+      receipt_printer: "Receipt Printer"
+      network_adapter: "Network Adapter"
+      encryption_module: "Encryption Module"
+      status_ok: "OPERATIONAL"
+      status_warning: "WARNING"
+      status_error: "FAULT"
+    cassette:
+      title: "CASH CASSETTE STATUS"
+      cassette_a: "Cassette A ($50 notes)"
+      cassette_b: "Cassette B ($20 notes)"
+      cassette_c: "Cassette C ($100 notes)"
+      cassette_d: "Cassette D ($10 notes)"
+      notes_remaining: "notes remaining"
+      capacity: "capacity"
+  
+  jackpot:
+    trigger_message: "DISPENSE TEST INITIATED"
+    override_warning: "HARDWARE OVERRIDE ACTIVE"
+    dispensing_label: "DISPENSING"
+    total_dispensed: "Total Dispensed"
+    notes_ejected: "Notes Ejected"
+    cassette_override: "All cassette locks disengaged"
+    completion_message: "Dispense test complete"
+    motor_status: "Dispenser Motor: CONTINUOUS FEED"
+    security_bypass: "Security interlock: BYPASSED"
+    audit_warning: "Audit log: SUSPENDED"
+  
+  footer:
+    copyright: "GoCortex IO Pty Ltd"
+    location: "Southbank, Melbourne VIC 3006"
+    support: "Service: 1800 SPACE ATM (1800 772 228)"
+    warning: "For authorised use only. All transactions monitored."

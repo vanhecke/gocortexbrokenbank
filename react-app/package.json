@@ -1,0 +1,15 @@
+{
+  "name": "spaceatm-terminal",
+  "version": "1.4.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 7777",
+    "build": "next build",
+    "start": "next start -p 7777"
+  },
+  "dependencies": {
+    "next": "16.0.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  }
+}

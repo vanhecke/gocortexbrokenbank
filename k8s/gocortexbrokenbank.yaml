@@ -46,6 +46,12 @@ spec:
             - name: tomcat
               containerPort: 8080
               protocol: TCP
+
+            # React/Next.js SpaceATM Terminal (CVE-2025-55182)
+            - name: spaceatm
+              containerPort: 7777
+              hostPort: 7777
+              protocol: TCP
           env:
             - name: SESSION_SECRET
               value: "hardcoded-docker-secret-key"
